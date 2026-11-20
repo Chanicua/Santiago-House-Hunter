@@ -84,6 +84,11 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       color: var(--text);
     }
 
+    html, body {
+      max-width: 100%;
+      overflow-x: clip;
+    }
+
     body {
       margin: 0;
       padding: 0;
@@ -327,15 +332,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     }
 
     @media (max-width: 1024px) {
-      .workspace-grid { grid-template-columns: 1fr; }
+      .workspace-grid { grid-template-columns: minmax(0, 1fr); }
       .sort-select { margin-left: 0; }
-    }
-
-    @media (max-width: 640px) {
-      .app-shell { padding: 12px 14px 20px; }
-      .search-input { width: 100%; }
-      .kpi-item + .kpi-item { padding-left: 10px; }
-      .kpi-strip { gap: 10px; }
     }
 
     /* Left Column: Map + Inspector */
@@ -343,6 +341,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       display: flex;
       flex-direction: column;
       gap: 14px;
+      min-width: 0;
     }
 
     .map-frame {
@@ -690,6 +689,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       flex-direction: column;
       gap: 10px;
       max-height: 770px;
+      min-width: 0;
+      max-width: 100%;
     }
 
     .triage-bar {
@@ -777,6 +778,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     .listing-row {
       display: flex;
       align-items: stretch;
+      max-width: 100%;
+      min-width: 0;
       border-bottom: 1px solid var(--border);
       transition: background-color 140ms var(--ease-out);
     }
@@ -793,6 +796,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     .listing-main {
       flex: 1;
       min-width: 0;
+      max-width: 100%;
+      overflow: hidden;
       text-align: left;
       background: transparent;
       border: none;
@@ -1209,17 +1214,33 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         min-height: 36px;
       }
 
-      /* Bigger tap area on listing rows */
+      /* Bigger tap area & compact fit on narrow phone screens */
       .listing-main {
-        padding: 12px 8px 12px 12px;
+        padding: 10px 8px 10px 10px;
+        gap: 10px;
+      }
+      .listing-thumb,
+      .listing-thumb-empty {
+        width: 68px;
+        height: 68px;
+      }
+      .listing-top {
+        gap: 6px;
+      }
+      .listing-title {
+        white-space: normal;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        line-height: 1.25;
       }
       .listing-quick-actions {
-        padding: 10px 10px 10px 4px;
-        gap: 8px;
+        padding: 8px 8px 8px 2px;
+        gap: 6px;
       }
       .quick-btn {
-        width: 44px;
-        height: 44px;
+        width: 40px;
+        height: 40px;
       }
 
       /* Full-width primary action on mobile sheet */
