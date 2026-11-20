@@ -1282,6 +1282,49 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       }
     }
 
+    .sync-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    .sync-dot.ok { background: var(--yes); }
+    .sync-dot.busy { background: var(--sun); }
+    .sync-dot.err { background: var(--no); }
+
+    .sync-panel {
+      display: none;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      font-size: 0.8125rem;
+    }
+    .sync-panel.is-open {
+      display: flex;
+    }
+    .sync-panel-info {
+      flex: 1 1 240px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+    .sync-panel-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      flex: 1 1 280px;
+    }
+    .sync-token-input {
+      flex: 1 1 180px;
+      min-width: 0;
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         transition-duration: 0.01ms !important;
@@ -1333,6 +1376,11 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
           </div>
         </div>
 
+        <button id="btn-sync" type="button" class="btn-pill" aria-expanded="false" aria-controls="sync-panel" title="Auto-sync Love It, Nope &amp; Notes across phones via GitHub">
+          <span id="sync-dot" class="sync-dot" aria-hidden="true"></span>
+          <span id="sync-label">Sync</span>
+        </button>
+
         <button id="btn-theme" type="button" class="btn-pill" aria-label="Toggle light or dark theme" title="Switch between sunlit and night mode">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="4"></circle>
@@ -1351,6 +1399,21 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         </button>
       </div>
     </header>
+
+    <!-- Inline GitHub Auto-Sync Panel -->
+    <section id="sync-panel" class="sync-panel" aria-label="GitHub auto-sync settings">
+      <div class="sync-panel-info" id="sync-status-msg">
+        <strong>Shared Sync (No Server):</strong> Paste a fine-grained GitHub token (Contents: Read &amp; write for <code>Santiago-House-Hunter</code>) once per phone to auto-sync Love It, Nope, Peeked, and Notes.
+      </div>
+      <div class="sync-panel-controls">
+        <input id="sync-token-input" type="password" class="control-input sync-token-input"
+          placeholder="github_pat_..." aria-label="GitHub personal access token" autocomplete="off" />
+        <button id="btn-sync-save" type="button" class="btn-pill">Save &amp; Sync</button>
+        <button id="btn-sync-now" type="button" class="btn-pill hidden">Sync Now</button>
+        <button id="btn-sync-link" type="button" class="btn-pill hidden" title="Copy a 1-tap setup link to send to your wife">Copy Wife Setup Link</button>
+        <button id="btn-sync-disconnect" type="button" class="btn-pill hidden">Disconnect</button>
+      </div>
+    </section>
 
     <!-- Filter Toolbar -->
     <section id="filter-bar" class="filter-bar" aria-label="Property filters">
@@ -1531,13 +1594,178 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
     const STORAGE_KEY = "santiago_house_tracker_v1";
     const THEME_KEY = "santiago_house_theme_v2";
+    const GH_TOKEN_KEY = "santiago_house_gh_token_v1";
+    const GH_SYNC_API = "https://api.github.com/repos/Chanicua/Santiago-House-Hunter/contents/data/tracker.json";
+
+    // Support 1-tap setup link (#ghtoken=...) and immediately strip it from the address bar
+    try {
+      const hash = window.location.hash || "";
+      if (hash.startsWith("#ghtoken=")) {
+        const incomingToken = decodeURIComponent(hash.slice("#ghtoken=".length)).trim();
+        if (incomingToken) {
+          localStorage.setItem(GH_TOKEN_KEY, incomingToken);
+        }
+        history.replaceState(null, "", window.location.pathname + window.location.search);
+      }
+    } catch (e) {}
+
     let tracker = {};
     try {
       tracker = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
     } catch (e) { tracker = {}; }
 
+    let ghToken = "";
+    try { ghToken = localStorage.getItem(GH_TOKEN_KEY) || ""; } catch (e) {}
+    let ghFileSha = null;
+    let ghPushTimer = null;
+    let ghSyncing = false;
+
+    function b64EncodeUtf8(str) {
+      const bytes = new TextEncoder().encode(str);
+      let bin = "";
+      bytes.forEach((b) => { bin += String.fromCharCode(b); });
+      return btoa(bin);
+    }
+
+    function b64DecodeUtf8(b64) {
+      const bin = atob(b64.replace(/\s/g, ""));
+      const bytes = Uint8Array.from(bin, (c) => c.charCodeAt(0));
+      return new TextDecoder().decode(bytes);
+    }
+
+    function setSyncUi(state, msg) {
+      const dot = document.getElementById("sync-dot");
+      const lbl = document.getElementById("sync-label");
+      const statusMsg = document.getElementById("sync-status-msg");
+      const input = document.getElementById("sync-token-input");
+      const btnSave = document.getElementById("btn-sync-save");
+      const btnNow = document.getElementById("btn-sync-now");
+      const btnLink = document.getElementById("btn-sync-link");
+      const btnDisc = document.getElementById("btn-sync-disconnect");
+
+      if (dot) {
+        dot.className = "sync-dot" + (state === "ok" ? " ok" : state === "busy" ? " busy" : state === "err" ? " err" : "");
+      }
+      if (lbl) {
+        lbl.textContent = state === "ok" ? "Synced" : state === "busy" ? "Syncing..." : state === "err" ? "Sync Err" : "Sync";
+      }
+      if (statusMsg && msg) {
+        statusMsg.innerHTML = msg;
+      }
+      const connected = Boolean(ghToken);
+      if (input) input.classList.toggle("hidden", connected);
+      if (btnSave) btnSave.classList.toggle("hidden", connected);
+      if (btnNow) btnNow.classList.toggle("hidden", !connected);
+      if (btnLink) btnLink.classList.toggle("hidden", !connected);
+      if (btnDisc) btnDisc.classList.toggle("hidden", !connected);
+    }
+
+    function mergeTrackers(localMap, remoteMap) {
+      const merged = {};
+      const allIds = new Set([...Object.keys(localMap || {}), ...Object.keys(remoteMap || {})]);
+      allIds.forEach((id) => {
+        const a = localMap?.[id];
+        const b = remoteMap?.[id];
+        if (!a) { merged[id] = b; return; }
+        if (!b) { merged[id] = a; return; }
+        const ta = Date.parse(a.updatedAt || 0) || 0;
+        const tb = Date.parse(b.updatedAt || 0) || 0;
+        const newer = tb >= ta ? b : a;
+        const older = tb >= ta ? a : b;
+        merged[id] = {
+          status: newer.status ?? older.status ?? "none",
+          note: newer.note !== undefined ? newer.note : (older.note || ""),
+          seen: Boolean(a.seen || b.seen),
+          updatedAt: newer.updatedAt || older.updatedAt || new Date().toISOString()
+        };
+      });
+      return merged;
+    }
+
+    async function pullFromGitHub(silent = false) {
+      if (!ghToken) return false;
+      if (!silent) setSyncUi("busy");
+      try {
+        const res = await fetch(`${GH_SYNC_API}?t=${Date.now()}`, {
+          headers: {
+            "Authorization": `Bearer ${ghToken}`,
+            "Accept": "application/vnd.github+json"
+          },
+          cache: "no-store"
+        });
+        if (res.status === 404) {
+          ghFileSha = null;
+          setSyncUi("ok", "<strong>Connected!</strong> Ready to save your shared decisions to <code>data/tracker.json</code>.");
+          return true;
+        }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        ghFileSha = data.sha;
+        const remoteText = data.content ? b64DecodeUtf8(data.content) : "{}";
+        const remoteObj = JSON.parse(remoteText || "{}");
+        const beforeStr = JSON.stringify(tracker);
+        tracker = mergeTrackers(tracker, remoteObj);
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(tracker)); } catch (e) {}
+        const timeStr = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        setSyncUi("ok", `<strong>Auto-Sync Active</strong> · Last synced at ${timeStr}. Changes sync automatically between both phones.`);
+        if (JSON.stringify(tracker) !== beforeStr && typeof renderAll === "function") {
+          renderAll();
+        }
+        return true;
+      } catch (err) {
+        setSyncUi("err", `<strong>Sync Error:</strong> ${esc(err.message)}. Check your GitHub token (needs Contents: Read &amp; write).`);
+        return false;
+      }
+    }
+
+    async function pushToGitHub(retryOnConflict = true) {
+      if (!ghToken || ghSyncing) return;
+      ghSyncing = true;
+      setSyncUi("busy");
+      try {
+        if (!ghFileSha) {
+          await pullFromGitHub(true);
+        }
+        const body = {
+          message: "chore: sync shared house decisions",
+          content: b64EncodeUtf8(JSON.stringify(tracker, null, 2) + "\n")
+        };
+        if (ghFileSha) body.sha = ghFileSha;
+        const res = await fetch(GH_SYNC_API, {
+          method: "PUT",
+          headers: {
+            "Authorization": `Bearer ${ghToken}`,
+            "Accept": "application/vnd.github+json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(body)
+        });
+        if (res.status === 409 && retryOnConflict) {
+          ghSyncing = false;
+          await pullFromGitHub(true);
+          return pushToGitHub(false);
+        }
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const out = await res.json();
+        ghFileSha = out.content?.sha || ghFileSha;
+        const timeStr = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        setSyncUi("ok", `<strong>Auto-Sync Active</strong> · Saved at ${timeStr}. Both phones stay in sync automatically.`);
+      } catch (err) {
+        setSyncUi("err", `<strong>Sync Save Error:</strong> ${esc(err.message)}. Decisions are still saved locally on this device.`);
+      } finally {
+        ghSyncing = false;
+      }
+    }
+
+    function schedulePushToGitHub() {
+      if (!ghToken) return;
+      clearTimeout(ghPushTimer);
+      ghPushTimer = setTimeout(() => { pushToGitHub(true); }, 700);
+    }
+
     function saveTracker() {
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(tracker)); } catch (e) {}
+      schedulePushToGitHub();
     }
 
     let activeTab = "review";
@@ -2522,6 +2750,57 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       URL.revokeObjectURL(url);
     });
 
+    // Wire GitHub Auto-Sync panel controls
+    const syncPanelEl = document.getElementById("sync-panel");
+    const syncBtnEl = document.getElementById("btn-sync");
+    syncBtnEl.addEventListener("click", () => {
+      const open = syncPanelEl.classList.toggle("is-open");
+      syncBtnEl.setAttribute("aria-expanded", String(open));
+    });
+
+    document.getElementById("btn-sync-save").addEventListener("click", async () => {
+      const val = document.getElementById("sync-token-input").value.trim();
+      if (!val) return;
+      ghToken = val;
+      try { localStorage.setItem(GH_TOKEN_KEY, ghToken); } catch (e) {}
+      document.getElementById("sync-token-input").value = "";
+      const ok = await pullFromGitHub();
+      if (ok && Object.keys(tracker).length) {
+        await pushToGitHub(true);
+      }
+    });
+
+    document.getElementById("btn-sync-now").addEventListener("click", async () => {
+      await pullFromGitHub();
+      await pushToGitHub(true);
+    });
+
+    document.getElementById("btn-sync-link").addEventListener("click", async () => {
+      if (!ghToken) return;
+      const setupUrl = `${window.location.origin}${window.location.pathname}#ghtoken=${encodeURIComponent(ghToken)}`;
+      try {
+        await navigator.clipboard.writeText(setupUrl);
+        setSyncUi("ok", "<strong>Setup link copied!</strong> Send it to your wife via WhatsApp — opening it once sets up auto-sync on her phone.");
+      } catch (e) {
+        prompt("Copy this 1-tap setup link for your wife:", setupUrl);
+      }
+    });
+
+    document.getElementById("btn-sync-disconnect").addEventListener("click", () => {
+      ghToken = "";
+      ghFileSha = null;
+      try { localStorage.removeItem(GH_TOKEN_KEY); } catch (e) {}
+      setSyncUi("idle", "<strong>Disconnected.</strong> Decisions are saved locally on this device only.");
+    });
+
+    window.addEventListener("focus", () => { if (ghToken) pullFromGitHub(true); });
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible" && ghToken) pullFromGitHub(true);
+    });
+    setInterval(() => {
+      if (document.visibilityState === "visible" && ghToken) pullFromGitHub(true);
+    }, 45000);
+
     window.addEventListener("resize", () => {
       resizeCanvas();
       if (!isMobileViewport()) closeMobileSheet();
@@ -2531,6 +2810,12 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     renderAll();
     if (LISTINGS.length) {
       selectProperty(LISTINGS[0].id, false, false);
+    }
+    if (ghToken) {
+      setSyncUi("busy");
+      pullFromGitHub(false);
+    } else {
+      setSyncUi("idle");
     }
   </script>
 </body>
