@@ -1366,13 +1366,6 @@
           <option value="6">6 Bedrooms</option>
         </select>
 
-        <select id="f-rooms" aria-label="Filter by total rooms" class="control-select">
-          <option value="0">Any Total Rooms</option>
-          <option value="7">7+ Total Rooms</option>
-          <option value="8">8+ Total Rooms</option>
-          <option value="9">9+ Total Rooms</option>
-        </select>
-
         <label class="range-group" for="f-max-price">
           <span>Max:</span>
           <input id="f-max-price" type="range" min="3000000" max="5000000" step="100000" value="5000000" />
@@ -1401,11 +1394,12 @@
 
         <select id="f-sort" aria-label="Sort listings" class="control-select sort-select">
           <option value="unseen_first">Fresh &amp; Unseen First</option>
+          <option value="newland_asc">Fastest to Newland (7:30am)</option>
+          <option value="alto_asc">Closest to Alto Las Condes</option>
           <option value="price_asc">Price: Low to High</option>
           <option value="price_desc">Price: High to Low</option>
           <option value="beds_desc">Bedrooms: Most First</option>
           <option value="m2_desc">Size (m²): Largest First</option>
-          <option value="rooms_desc">Total Rooms: Most First</option>
         </select>
       </div>
     </section>
@@ -1416,12 +1410,12 @@
       <!-- Left: Interactive Map + Selected Inspector -->
       <div class="left-col">
         <div class="map-frame">
-          <canvas id="map-canvas" aria-label="Interactive map of house listings with Colegio Newland and Alto Las Condes references"></canvas>
+          <canvas id="map-canvas" aria-label="Interactive map of house listings with Alto Las Condes and Colegio Newland references"></canvas>
 
           <div class="map-overlay-top-left" role="group" aria-label="Jump to zone or reference">
             <button type="button" data-jump="all" class="map-chip" aria-pressed="true">Both Zones</button>
-            <button type="button" data-jump="newland" class="map-chip" aria-pressed="false">Colegio Newland</button>
             <button type="button" data-jump="alto_las_condes" class="map-chip" aria-pressed="false">Alto Las Condes</button>
+            <button type="button" data-jump="newland" class="map-chip" aria-pressed="false">Colegio Newland</button>
           </div>
 
           <div class="map-zoom-controls" role="group" aria-label="Map zoom controls">
@@ -1437,7 +1431,7 @@
           <span class="legend-item"><span class="legend-dot" style="background: var(--pool);"></span> Pool</span>
           <span class="legend-item"><span class="legend-dot" style="background: #0284c7;"></span> Standard</span>
           <span class="legend-item"><span class="legend-dot" style="background: var(--yes);"></span> Love It</span>
-          <span class="legend-item"><span class="legend-dot" style="background: var(--ref-pin); border-radius: 3px;"></span> Newland / Alto LC</span>
+          <span class="legend-item"><span class="legend-dot" style="background: var(--ref-pin); border-radius: 3px;"></span> Alto Las Condes / Newland</span>
         </div>
 
         <section id="inspector" class="inspector-panel" aria-label="Selected property details">
@@ -1634,6 +1628,21 @@
       return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     }
 
+    // Estimated weekday 7:30 AM driving time to Colegio Newland (El Tranque 11093)
+    // Accounts for hills/arterial road factor (1.35x) and peak school drop-off traffic.
+    function estNewlandDrive730(item) {
+      if (!item || !item.lat || !item.lon) return null;
+      const straightKm = kmBetween(item.lat, item.lon, NEWLAND.lat, NEWLAND.lon);
+      const roadKm = straightKm * 1.35;
+      const crossesCorridor = item.lat <= -33.372; // South of Mapocho / Las Condes -> Puente La Dehesa
+      const avgKmh = crossesCorridor ? 16 : 19;
+      const gateQueueMin = crossesCorridor ? 5 : 3;
+      const mid = Math.max(4, Math.round((roadKm / avgKmh) * 60 + gateQueueMin));
+      const low = Math.max(3, mid - 2);
+      const high = mid + 4;
+      return { low, high, mid, label: `${low}–${high} min` };
+    }
+
     // Subtitle
     const dt = PAYLOAD.generated_at ? new Date(PAYLOAD.generated_at).toLocaleString() : "Today";
     document.getElementById("meta-subtitle").textContent =
@@ -1699,7 +1708,6 @@
       const q = document.getElementById("f-search").value.trim().toLowerCase();
       const zone = document.getElementById("f-zone").value;
       const beds = document.getElementById("f-beds").value;
-      const minRooms = parseInt(document.getElementById("f-rooms").value, 10) || 0;
       const maxPrice = parseInt(document.getElementById("f-max-price").value, 10);
       const newOnly = document.getElementById("f-new-only").checked;
       const unseenOnly = document.getElementById("f-unseen-only").checked;
@@ -1718,7 +1726,6 @@
         if (unseenOnly && !isUnseen(item)) return false;
         if (zone !== "all" && item.zone !== zone) return false;
         if (beds !== "all" && item.bedrooms !== parseInt(beds, 10)) return false;
-        if ((item.estimated_rooms || 0) < minRooms) return false;
         if (item.price_clp > maxPrice) return false;
         if (poolOnly && !item.has_pool) return false;
         if (condoOnly && !item.is_condominio) return false;
@@ -1741,11 +1748,20 @@
           if (nb !== na) return nb - na;
           return a.price_clp - b.price_clp;
         }
+        if (sortMode === "newland_asc") {
+          const da = estNewlandDrive730(a)?.mid ?? 999;
+          const db = estNewlandDrive730(b)?.mid ?? 999;
+          return da - db || a.price_clp - b.price_clp;
+        }
+        if (sortMode === "alto_asc") {
+          const da = (a.lat && a.lon) ? kmBetween(a.lat, a.lon, ALTO_LC.lat, ALTO_LC.lon) : 999;
+          const db = (b.lat && b.lon) ? kmBetween(b.lat, b.lon, ALTO_LC.lat, ALTO_LC.lon) : 999;
+          return da - db || a.price_clp - b.price_clp;
+        }
         if (sortMode === "price_asc") return a.price_clp - b.price_clp;
         if (sortMode === "price_desc") return b.price_clp - a.price_clp;
         if (sortMode === "beds_desc") return b.bedrooms - a.bedrooms || a.price_clp - b.price_clp;
         if (sortMode === "m2_desc") return (b.built_m2 || 0) - (a.built_m2 || 0);
-        if (sortMode === "rooms_desc") return (b.estimated_rooms || 0) - (a.estimated_rooms || 0);
         return 0;
       });
       return out;
@@ -2172,8 +2188,11 @@
       if (item.has_service_room) tags.push(`<span class="tag tag-service">Service Room</span>`);
       if (item.is_furnished) tags.push(`<span class="tag tag-furnished">Furnished</span>`);
 
-      const distNewland = (item.lat && item.lon) ? kmBetween(item.lat, item.lon, NEWLAND.lat, NEWLAND.lon).toFixed(1) : null;
       const distAlto = (item.lat && item.lon) ? kmBetween(item.lat, item.lon, ALTO_LC.lat, ALTO_LC.lon).toFixed(1) : null;
+      const driveNewland = estNewlandDrive730(item);
+      const newlandRouteUrl = (item.lat && item.lon)
+        ? `https://www.google.com/maps/dir/?api=1&origin=${item.lat},${item.lon}&destination=${NEWLAND.lat},${NEWLAND.lon}&travelmode=driving`
+        : null;
 
       box.innerHTML = `
         <div class="mobile-sheet-header">
@@ -2197,18 +2216,18 @@
               </div>
             </div>
 
-            ${(distNewland && distAlto) ? `
+            ${(distAlto && driveNewland) ? `
               <div class="inspector-distances tabular-nums">
-                <span>${distNewland} km to Colegio Newland</span>
-                <span>·</span>
                 <span>${distAlto} km to Alto Las Condes</span>
+                <span>·</span>
+                <span title="Estimated weekday 7:30 AM school-traffic drive to Av. El Tranque 11093">~${driveNewland.label} drive to Colegio Newland @ 7:30am</span>
+                ${newlandRouteUrl ? `<a href="${newlandRouteUrl}" target="_blank" rel="noopener" style="font-weight:700;">Route ↗</a>` : ""}
               </div>
             ` : ""}
 
             <div class="inspector-specs tabular-nums">
               <span><strong>${item.bedrooms}</strong> Bedrooms</span>
               <span><strong>${item.bathrooms || "-"}</strong> Baths</span>
-              <span><strong>~${item.estimated_rooms}</strong> Total Rooms</span>
               <span><strong>${item.built_m2 ? item.built_m2 + " m²" : "-"}</strong> Built</span>
               ${item.lot_m2 ? `<span><strong>${item.lot_m2} m²</strong> Lot</span>` : ""}
               ${item.parking_spaces ? `<span><strong>${item.parking_spaces}</strong> Parking</span>` : ""}
@@ -2253,7 +2272,6 @@
       let count = 0;
       if (document.getElementById("f-zone").value !== "all") count++;
       if (document.getElementById("f-beds").value !== "all") count++;
-      if (document.getElementById("f-rooms").value !== "0") count++;
       if (parseInt(document.getElementById("f-max-price").value, 10) < 5000000) count++;
       if (document.getElementById("f-new-only").checked) count++;
       if (document.getElementById("f-unseen-only").checked) count++;
@@ -2267,7 +2285,6 @@
       document.getElementById("f-search").value = "";
       document.getElementById("f-zone").value = "all";
       document.getElementById("f-beds").value = "all";
-      document.getElementById("f-rooms").value = "0";
       document.getElementById("f-max-price").value = "5000000";
       document.getElementById("f-max-price-lbl").textContent = "$5.0M";
       document.getElementById("f-new-only").checked = false;
@@ -2320,8 +2337,8 @@
         const isSel = item.id === mapState.selectedId;
         const unseen = isUnseen(item);
         const isNew = isAddedRecently(item);
-        const distNewland = (item.lat && item.lon) ? kmBetween(item.lat, item.lon, NEWLAND.lat, NEWLAND.lon).toFixed(1) : null;
         const distAlto = (item.lat && item.lon) ? kmBetween(item.lat, item.lon, ALTO_LC.lat, ALTO_LC.lon).toFixed(1) : null;
+        const driveNewland = estNewlandDrive730(item);
         const rowCls = [
           "listing-row",
           unseen ? "is-unseen" : "",
@@ -2346,11 +2363,10 @@
                   </div>
                 </div>
                 <div class="listing-zone">${esc(item.address || item.zone_label)} · ${esc(item.source)}${item.published_ago ? ` · ${esc(item.published_ago)}` : ""}</div>
-                ${(distNewland && distAlto) ? `<div class="listing-distances tabular-nums">${distNewland} km Newland · ${distAlto} km Alto LC</div>` : ""}
+                ${(distAlto && driveNewland) ? `<div class="listing-distances tabular-nums" title="Estimated weekday 7:30 AM drive to Colegio Newland">${distAlto} km Alto Las Condes · ~${driveNewland.label} Newland @ 7:30am</div>` : ""}
                 <div class="listing-specs tabular-nums">
                   <span>${item.bedrooms}D</span>
                   <span>${item.bathrooms || "-"}B</span>
-                  <span>~${item.estimated_rooms} rooms</span>
                   ${item.built_m2 ? `<span>${item.built_m2} m²</span>` : ""}
                   ${item.lot_m2 ? `<span>${item.lot_m2} m² lot</span>` : ""}
                   ${isNew ? `<span class="tag tag-new">Fresh</span>` : ""}
@@ -2448,7 +2464,7 @@
 
     document.getElementById("btn-mark-seen").addEventListener("click", markAllVisibleSeen);
 
-    ["f-search", "f-zone", "f-beds", "f-rooms", "f-new-only", "f-unseen-only", "f-pool", "f-condo", "f-sort"].forEach((id) => {
+    ["f-search", "f-zone", "f-beds", "f-new-only", "f-unseen-only", "f-pool", "f-condo", "f-sort"].forEach((id) => {
       document.getElementById(id).addEventListener("input", renderAll);
       document.getElementById(id).addEventListener("change", renderAll);
     });
