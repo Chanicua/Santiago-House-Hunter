@@ -67,6 +67,18 @@
         "default_zone": "alto_las_condes",
         "max_pages": 2
       }
+    ],
+    "mercadolibre": [
+      {
+        "url": "https://inmuebles.mercadolibre.cl/casas/arriendo/lo-barnechea-rm-metropolitana",
+        "default_zone": "la_dehesa",
+        "max_pages": 2
+      },
+      {
+        "url": "https://inmuebles.mercadolibre.cl/casas/arriendo/las-condes-rm-metropolitana",
+        "default_zone": "alto_las_condes",
+        "max_pages": 2
+      }
     ]
   }
 }

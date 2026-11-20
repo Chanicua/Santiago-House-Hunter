@@ -371,11 +371,42 @@ def scrape_toctoc(source_cfg: Dict[str, Any], uf_clp: float, zones_cfg: Dict[str
     return results
 
 
+def _collect_polycards(node: Any, out: List[Dict[str, Any]]) -> None:
+    if isinstance(node, dict):
+        if "polycard" in node and isinstance(node["polycard"], dict):
+            out.append(node["polycard"])
+        else:
+            for v in node.values():
+                if isinstance(v, (dict, list)):
+                    _collect_polycards(v, out)
+    elif isinstance(node, list):
+        for item in node:
+            if isinstance(item, (dict, list)):
+                _collect_polycards(item, out)
+
+
+def _extract_polycards(html: str) -> List[Dict[str, Any]]:
+    decoder = json.JSONDecoder()
+    polycards: List[Dict[str, Any]] = []
+    for pat in (r"_n\.ctx\.r\s*=\s*(\{)", r"__PRELOADED_STATE__\s*=\s*(\{)"):
+        for m in re.finditer(pat, html):
+            try:
+                obj, _ = decoder.raw_decode(html[m.start(1):])
+                _collect_polycards(obj, polycards)
+            except Exception:
+                continue
+        if polycards:
+            return polycards
+    return polycards
+
+
 def scrape_portalinmobiliario(
     source_cfg: Dict[str, Any],
     uf_clp: float,
     zones_cfg: Dict[str, Any],
     geo_cache: Dict[str, List[float]],
+    source_name: str = "PortalInmobiliario",
+    id_prefix: str = "pi",
 ) -> List[Dict[str, Any]]:
     results: List[Dict[str, Any]] = []
     base_url = source_cfg["url"]
@@ -392,22 +423,15 @@ def scrape_portalinmobiliario(
         try:
             html = fetch_url(url)
         except Exception as e:
-            print(f"[WARN] PortalInmobiliario fetch failed ({url}): {e}")
+            print(f"[WARN] {source_name} fetch failed ({url}): {e}")
             break
 
-        m = re.search(r"_n\.ctx\.r=(\{.*\})", html, re.S)
-        if not m:
-            break
-        try:
-            obj, _ = json.JSONDecoder().raw_decode(m.group(1))
-            items = obj["appProps"]["pageProps"]["initialState"]["results"]
-        except Exception as e:
-            print(f"[WARN] PortalInmobiliario JSON parse failed ({url}): {e}")
-            break
-
-        polycards = [it["polycard"] for it in items if "polycard" in it]
+        polycards = _extract_polycards(html)
         if not polycards:
+            print(f"[WARN] {source_name} no polycards found ({url})")
             break
+
+        print(f"[INFO] {source_name} {url} -> {len(polycards)} raw items")
 
         for pc in polycards:
             try:
@@ -444,27 +468,28 @@ def scrape_portalinmobiliario(
                         built_m2 = parse_number(al)
 
                 zone = classify_zone(None, None, f"{title} {loc_text}", default_zone, zones_cfg)
-                lat, lon, precision = geocode_address(loc_text or title, zone, geo_cache, zones_cfg, allow_nominatim=False)
+                clean_addr = re.sub(r"\b\d+(?:\.\d+)?e\+\d+\s*-\s*\d+(?:\.\d+)?e\+\d+\b", "", loc_text).strip()
+                lat, lon, precision = geocode_address(clean_addr or title, zone, geo_cache, zones_cfg, allow_nominatim=True)
                 feats = extract_features(title, loc_text, beds)
 
                 pics = (pc.get("pictures") or {}).get("pictures") or []
                 img = f"https://http2.mlstatic.com/D_NQ_NP_2X_{pics[0]['id']}-N.webp" if pics else ""
                 raw_url = meta.get("url", "")
                 prop_url = f"https://{raw_url}" if raw_url and not raw_url.startswith("http") else raw_url
-                pid = f"pi_{meta.get('id', abs(hash(title + loc_text)))}"
+                pid = f"{id_prefix}_{meta.get('id', abs(hash(title + loc_text)))}"
 
                 comuna = "Lo Barnechea" if zone == "la_dehesa" else "Las Condes"
 
                 results.append(
                     {
                         "id": pid,
-                        "source": "PortalInmobiliario",
+                        "source": source_name,
                         "title": title,
                         "url": prop_url,
                         "image": img,
-                        "agency": "PortalInmobiliario",
+                        "agency": source_name,
                         "comuna": comuna,
-                        "address": re.sub(r"\b\d+(?:\.\d+)?e\+\d+\s*-\s*\d+(?:\.\d+)?e\+\d+\b", "", loc_text).strip(),
+                        "address": clean_addr,
                         "zone": zone,
                         "zone_label": zones_cfg[zone]["label"],
                         "price_clp": int(round(price_clp)),
@@ -577,7 +602,9 @@ def main() -> None:
     for src in sources_cfg.get("toctoc", []):
         raw_listings.extend(scrape_toctoc(src, uf_clp, zones_cfg))
     for src in sources_cfg.get("portalinmobiliario", []):
-        raw_listings.extend(scrape_portalinmobiliario(src, uf_clp, zones_cfg, geo_cache))
+        raw_listings.extend(scrape_portalinmobiliario(src, uf_clp, zones_cfg, geo_cache, "PortalInmobiliario", "pi"))
+    for src in sources_cfg.get("mercadolibre", []):
+        raw_listings.extend(scrape_portalinmobiliario(src, uf_clp, zones_cfg, geo_cache, "MercadoLibre", "ml"))
 
     save_json(GEOCODE_CACHE_PATH, geo_cache)
 
