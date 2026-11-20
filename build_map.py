@@ -670,33 +670,176 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       outline: none;
     }
 
-    /* Right Column: Flat List Container with Hairline Dividers (no nested cards) */
+    /* Right Column: Flat List Container with Triage Tabs & Hairline Dividers */
     .listings-panel {
       border-radius: var(--radius-lg);
       border: 1px solid var(--border);
       background: var(--surface);
-      max-height: 740px;
+      display: flex;
+      flex-direction: column;
+      max-height: 760px;
+      overflow: hidden;
+    }
+
+    .triage-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+
+    .triage-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .triage-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 32px;
+      padding: 0 10px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 140ms var(--ease-out), color 140ms var(--ease-out), border-color 140ms var(--ease-out);
+    }
+    .triage-tab:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+    }
+    .triage-tab[aria-selected="true"] {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent-text);
+      font-weight: 600;
+    }
+    .triage-tab[data-tab="yes"][aria-selected="true"] {
+      background: var(--visited-soft);
+      border-color: var(--visited);
+      color: var(--visited);
+    }
+    .triage-tab[data-tab="no"][aria-selected="true"] {
+      background: var(--dismissed-soft);
+      border-color: var(--dismissed);
+      color: var(--dismissed);
+    }
+
+    .triage-count {
+      font-size: 0.75rem;
+      opacity: 0.85;
+    }
+
+    .mark-seen-btn {
+      min-height: 30px;
+      padding: 0 9px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background-color 140ms var(--ease-out), color 140ms var(--ease-out);
+    }
+    .mark-seen-btn:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+    }
+
+    .listings-scroll {
       overflow-y: auto;
+      flex: 1;
     }
 
     .listing-row {
-      width: 100%;
+      display: flex;
+      align-items: stretch;
+      border-bottom: 1px solid var(--border);
+      transition: background-color 140ms var(--ease-out);
+    }
+    .listing-row:last-child { border-bottom: none; }
+    .listing-row.is-unseen {
+      background: rgba(79, 143, 247, 0.05);
+    }
+    html.light .listing-row.is-unseen {
+      background: rgba(37, 99, 235, 0.04);
+    }
+    .listing-row:hover { background: var(--surface-hover); }
+    .listing-row.is-selected {
+      background: var(--surface-active);
+      box-shadow: inset 3px 0 0 var(--accent);
+    }
+
+    .listing-main {
+      flex: 1;
+      min-width: 0;
       text-align: left;
       background: transparent;
       border: none;
-      border-bottom: 1px solid var(--border);
-      padding: 12px 14px;
+      padding: 12px 10px 12px 14px;
       display: flex;
       gap: 12px;
       align-items: flex-start;
       cursor: pointer;
-      transition: background-color 140ms var(--ease-out);
     }
-    .listing-row:last-child { border-bottom: none; }
-    .listing-row:hover { background: var(--surface-hover); }
-    .listing-row[aria-pressed="true"] {
-      background: var(--surface-active);
-      box-shadow: inset 3px 0 0 var(--accent);
+
+    .listing-quick-actions {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 12px 10px 4px;
+      flex-shrink: 0;
+    }
+
+    .quick-btn {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-strong);
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: background-color 140ms var(--ease-out), border-color 140ms var(--ease-out), color 140ms var(--ease-out);
+    }
+    .quick-btn.yes:hover,
+    .quick-btn.yes[aria-pressed="true"] {
+      background: var(--visited-soft);
+      border-color: var(--visited);
+      color: var(--visited);
+    }
+    .quick-btn.no:hover,
+    .quick-btn.no[aria-pressed="true"] {
+      background: var(--dismissed-soft);
+      border-color: var(--dismissed);
+      color: var(--dismissed);
+    }
+
+    .unseen-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-text);
+      flex-shrink: 0;
+      display: inline-block;
+    }
+
+    .tag-new {
+      background: var(--visited-soft);
+      color: var(--visited);
     }
 
     .listing-thumb {
@@ -815,16 +958,20 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
             <span id="kpi-count" class="kpi-val tabular-nums">0</span>
           </div>
           <div class="kpi-item">
+            <span class="kpi-label">New (24h)</span>
+            <span id="kpi-new" class="kpi-val tabular-nums" style="color: var(--visited);">0</span>
+          </div>
+          <div class="kpi-item">
+            <span class="kpi-label">Unseen</span>
+            <span id="kpi-unseen" class="kpi-val tabular-nums" style="color: var(--accent-text);">0</span>
+          </div>
+          <div class="kpi-item">
+            <span class="kpi-label">Yes</span>
+            <span id="kpi-yes" class="kpi-val tabular-nums" style="color: var(--visited);">0</span>
+          </div>
+          <div class="kpi-item">
             <span class="kpi-label">Avg Rent</span>
             <span id="kpi-avg" class="kpi-val tabular-nums">-</span>
-          </div>
-          <div class="kpi-item">
-            <span class="kpi-label">With Pool</span>
-            <span id="kpi-pool" class="kpi-val pool tabular-nums">0</span>
-          </div>
-          <div class="kpi-item">
-            <span class="kpi-label">Shortlist</span>
-            <span id="kpi-shortlist" class="kpi-val shortlist tabular-nums">0</span>
           </div>
         </div>
 
@@ -836,7 +983,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
           <span id="theme-label">Light</span>
         </button>
 
-        <button id="btn-export" type="button" class="btn-ghost" title="Export your shortlist &amp; notes as JSON">
+        <button id="btn-export" type="button" class="btn-ghost" title="Export your decisions &amp; notes as JSON">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
             <polyline points="7 10 12 15 17 10"></polyline>
@@ -879,6 +1026,16 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       </label>
 
       <label class="check-pill">
+        <input id="f-new-only" type="checkbox" />
+        <span>New / Past 24h</span>
+      </label>
+
+      <label class="check-pill">
+        <input id="f-unseen-only" type="checkbox" />
+        <span>Unseen Only</span>
+      </label>
+
+      <label class="check-pill">
         <input id="f-pool" type="checkbox" />
         <span>Pool Only</span>
       </label>
@@ -888,14 +1045,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         <span>Condominio</span>
       </label>
 
-      <select id="f-track" aria-label="Filter by tracker status" class="control-select">
-        <option value="active">All Active</option>
-        <option value="shortlist">Shortlisted Only</option>
-        <option value="visited">Visited Only</option>
-        <option value="all_inc_dismissed">Include Dismissed</option>
-      </select>
-
       <select id="f-sort" aria-label="Sort listings" class="control-select sort-select">
+        <option value="unseen_first">Unseen &amp; New First</option>
         <option value="price_asc">Price: Low to High</option>
         <option value="price_desc">Price: High to Low</option>
         <option value="beds_desc">Bedrooms: Most First</option>
@@ -924,9 +1075,10 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
           </div>
 
           <div class="map-legend" aria-label="Map legend">
+            <span class="legend-item"><span class="legend-dot" style="background: transparent; border: 2px solid var(--accent-text); width: 11px; height: 11px;"></span> New / Unseen</span>
             <span class="legend-item"><span class="legend-dot" style="background: var(--pool);"></span> Pool</span>
             <span class="legend-item"><span class="legend-dot" style="background: #818cf8;"></span> Standard</span>
-            <span class="legend-item"><span class="legend-dot" style="background: var(--shortlist);"></span> Shortlisted</span>
+            <span class="legend-item"><span class="legend-dot" style="background: var(--visited);"></span> Yes</span>
             <span class="legend-item"><span class="legend-square" style="background: #fb7185;"></span> Landmark</span>
           </div>
 
@@ -940,8 +1092,29 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         </section>
       </div>
 
-      <!-- Right: Scrollable Property List -->
-      <section class="listings-panel" id="listing-cards" aria-label="Matching properties"></section>
+      <!-- Right: Triage Tabs + Scrollable Property List -->
+      <section class="listings-panel" aria-label="Property triage list">
+        <div class="triage-bar">
+          <div class="triage-tabs" role="tablist" aria-label="Triage lists">
+            <button type="button" role="tab" class="triage-tab" data-tab="review" aria-selected="true">
+              To Review <span id="tab-count-review" class="triage-count tabular-nums">0</span>
+            </button>
+            <button type="button" role="tab" class="triage-tab" data-tab="yes" aria-selected="false">
+              Yes <span id="tab-count-yes" class="triage-count tabular-nums">0</span>
+            </button>
+            <button type="button" role="tab" class="triage-tab" data-tab="no" aria-selected="false">
+              No <span id="tab-count-no" class="triage-count tabular-nums">0</span>
+            </button>
+            <button type="button" role="tab" class="triage-tab" data-tab="all" aria-selected="false">
+              All <span id="tab-count-all" class="triage-count tabular-nums">0</span>
+            </button>
+          </div>
+          <button id="btn-mark-seen" type="button" class="mark-seen-btn" title="Mark all currently visible houses as seen">
+            Mark All Seen
+          </button>
+        </div>
+        <div class="listings-scroll" id="listing-cards"></div>
+      </section>
     </main>
   </div>
 
@@ -960,12 +1133,73 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(tracker)); } catch (e) {}
     }
 
+    let activeTab = "review";
+
     function getTrack(id) {
-      return tracker[id] || { status: "none", note: "" };
+      return tracker[id] || { status: "none", note: "", seen: false };
+    }
+
+    function getDecision(id) {
+      const st = getTrack(id).status;
+      if (st === "yes" || st === "shortlist" || st === "visited") return "yes";
+      if (st === "no" || st === "dismissed") return "no";
+      return "none";
+    }
+
+    function isUnseen(item) {
+      return !getTrack(item.id).seen;
+    }
+
+    const REF_DATE_MS = (() => {
+      const base = PAYLOAD.generated_at ? new Date(PAYLOAD.generated_at) : new Date();
+      return Date.UTC(base.getUTCFullYear(), base.getUTCMonth(), base.getUTCDate());
+    })();
+
+    function isAddedRecently(item) {
+      if (item.first_seen) {
+        const parts = String(item.first_seen).split("-");
+        if (parts.length === 3) {
+          const seenMs = Date.UTC(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+          const diffDays = (REF_DATE_MS - seenMs) / 86400000;
+          if (diffDays >= 0 && diffDays <= 1) return true;
+        }
+      }
+      if (item.status === "new") return true;
+      const pub = String(item.published_ago || "").toLowerCase();
+      return /\bhoy\b|\bayer\b|\bhace\s+\d+\s*(m|min|h|hr|hora|horas)\b|\bhace\s+1\s*d\b/.test(pub);
     }
 
     function setTrack(id, patch) {
       tracker[id] = { ...getTrack(id), ...patch, updatedAt: new Date().toISOString() };
+      saveTracker();
+      renderAll();
+    }
+
+    function setDecision(id, decision) {
+      const cur = getDecision(id);
+      const nextStatus = cur === decision ? "none" : decision;
+      const prevTabItems = activeTab === "review" ? getFilteredListings("review") : [];
+      tracker[id] = { ...getTrack(id), status: nextStatus, seen: true, updatedAt: new Date().toISOString() };
+      saveTracker();
+
+      if (activeTab === "review" && nextStatus !== "none" && mapState.selectedId === id) {
+        const idx = prevTabItems.findIndex((x) => x.id === id);
+        const nextItem = prevTabItems[idx + 1] || prevTabItems[idx - 1] || null;
+        mapState.selectedId = nextItem ? nextItem.id : null;
+        if (nextItem) {
+          tracker[nextItem.id] = { ...getTrack(nextItem.id), seen: true };
+          saveTracker();
+        }
+      }
+      renderAll();
+    }
+
+    function markAllVisibleSeen() {
+      const items = getFilteredListings();
+      const now = new Date().toISOString();
+      items.forEach((item) => {
+        tracker[item.id] = { ...getTrack(item.id), seen: true, updatedAt: now };
+      });
       saveTracker();
       renderAll();
     }
@@ -1058,23 +1292,27 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       return { x, y };
     }
 
-    function getFilteredListings() {
+    function getFilteredListings(tabOverride) {
       const q = document.getElementById("f-search").value.trim().toLowerCase();
       const zone = document.getElementById("f-zone").value;
       const beds = document.getElementById("f-beds").value;
       const minRooms = parseInt(document.getElementById("f-rooms").value, 10) || 0;
       const maxPrice = parseInt(document.getElementById("f-max-price").value, 10);
+      const newOnly = document.getElementById("f-new-only").checked;
+      const unseenOnly = document.getElementById("f-unseen-only").checked;
       const poolOnly = document.getElementById("f-pool").checked;
       const condoOnly = document.getElementById("f-condo").checked;
-      const trackMode = document.getElementById("f-track").value;
       const sortMode = document.getElementById("f-sort").value;
+      const tab = tabOverride || activeTab;
 
       let out = LISTINGS.filter((item) => {
-        const tr = getTrack(item.id);
-        if (trackMode === "active" && tr.status === "dismissed") return false;
-        if (trackMode === "shortlist" && tr.status !== "shortlist") return false;
-        if (trackMode === "visited" && tr.status !== "visited") return false;
+        const dec = getDecision(item.id);
+        if (tab === "review" && dec !== "none") return false;
+        if (tab === "yes" && dec !== "yes") return false;
+        if (tab === "no" && dec !== "no") return false;
 
+        if (newOnly && !isAddedRecently(item)) return false;
+        if (unseenOnly && !isUnseen(item)) return false;
         if (zone !== "all" && item.zone !== zone) return false;
         if (beds !== "all" && item.bedrooms !== parseInt(beds, 10)) return false;
         if ((item.estimated_rooms || 0) < minRooms) return false;
@@ -1083,6 +1321,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         if (condoOnly && !item.is_condominio) return false;
 
         if (q) {
+          const tr = getTrack(item.id);
           const blob = `${item.title} ${item.address} ${item.comuna} ${item.agency} ${tr.note}`.toLowerCase();
           if (!blob.includes(q)) return false;
         }
@@ -1090,6 +1329,15 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       });
 
       out.sort((a, b) => {
+        if (sortMode === "unseen_first") {
+          const ua = isUnseen(a) ? 1 : 0;
+          const ub = isUnseen(b) ? 1 : 0;
+          if (ub !== ua) return ub - ua;
+          const na = isAddedRecently(a) ? 1 : 0;
+          const nb = isAddedRecently(b) ? 1 : 0;
+          if (nb !== na) return nb - na;
+          return a.price_clp - b.price_clp;
+        }
         if (sortMode === "price_asc") return a.price_clp - b.price_clp;
         if (sortMode === "price_desc") return b.price_clp - a.price_clp;
         if (sortMode === "beds_desc") return b.bedrooms - a.bedrooms || a.price_clp - b.price_clp;
@@ -1170,16 +1418,24 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       items.forEach((item) => {
         if (!item.lat || !item.lon) return;
         const p = project(item.lat, item.lon);
-        const tr = getTrack(item.id);
+        const dec = getDecision(item.id);
         const isSel = item.id === mapState.selectedId;
         const isHov = item.id === mapState.hoveredId;
+        const highlightNew = isUnseen(item) || isAddedRecently(item);
 
         let color = item.has_pool ? (isLight ? "#0891b2" : "#22d3ee") : "#818cf8";
-        if (tr.status === "shortlist") color = isLight ? "#d97706" : "#f5b942";
-        if (tr.status === "visited") color = isLight ? "#047857" : "#34d399";
-        if (tr.status === "dismissed") color = "#64748b";
+        if (dec === "yes") color = isLight ? "#047857" : "#34d399";
+        if (dec === "no") color = "#64748b";
 
         const radius = isSel ? 9 : isHov ? 8 : 6;
+
+        if (highlightNew && dec === "none") {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, radius + 3.5, 0, Math.PI * 2);
+          ctx.lineWidth = 1.5;
+          ctx.strokeStyle = isLight ? "#2563eb" : "#7db1ff";
+          ctx.stroke();
+        }
 
         if (isSel || isHov) {
           ctx.beginPath();
@@ -1326,9 +1582,16 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       });
     });
 
-    function selectProperty(id) {
+    function selectProperty(id, markSeen = true) {
       mapState.selectedId = id;
       const item = LISTINGS.find((x) => x.id === id);
+      if (markSeen && item) {
+        const cur = getTrack(id);
+        if (!cur.seen) {
+          tracker[id] = { ...cur, seen: true, updatedAt: new Date().toISOString() };
+          saveTracker();
+        }
+      }
       if (item && item.lat && item.lon) {
         mapState.centerLat = item.lat;
         mapState.centerLon = item.lon;
@@ -1339,8 +1602,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       drawMap();
     }
 
-    const SVG_STAR = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
-    const SVG_CHECK = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>`;
+    const SVG_CHECK = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>`;
+    const SVG_NO = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
     const SVG_EXT = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
 
     function renderInspector(item) {
@@ -1350,7 +1613,9 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         return;
       }
       const tr = getTrack(item.id);
+      const dec = getDecision(item.id);
       const tags = [];
+      if (isAddedRecently(item)) tags.push(`<span class="tag tag-new">New (24h)</span>`);
       if (item.has_pool) tags.push(`<span class="tag tag-pool">Pool</span>`);
       if (item.has_quincho) tags.push(`<span class="tag tag-quincho">Quincho</span>`);
       if (item.is_condominio) tags.push(`<span class="tag tag-condo">Condominio</span>`);
@@ -1364,7 +1629,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
             <div class="inspector-head">
               <div>
                 <h2 class="inspector-title">${esc(item.title)}</h2>
-                <div class="inspector-meta">${esc(item.address)} · ${esc(item.source)} (${esc(item.agency)})</div>
+                <div class="inspector-meta">${esc(item.address)} · ${esc(item.source)} (${esc(item.agency)})${item.published_ago ? ` · ${esc(item.published_ago)}` : ""}</div>
               </div>
               <div class="inspector-price">
                 <div class="inspector-price-clp tabular-nums">${fmtCLP(item.price_clp)}</div>
@@ -1385,19 +1650,19 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
             ${item.description_excerpt ? `<p class="inspector-excerpt">${esc(item.description_excerpt)}</p>` : ""}
 
             <div class="inspector-actions">
-              <button type="button" onclick="setTrack('${esc(item.id)}', {status: '${tr.status === "shortlist" ? "none" : "shortlist"}'})"
-                class="action-btn ${tr.status === "shortlist" ? "is-shortlist" : ""}">
-                ${SVG_STAR}
-                ${tr.status === "shortlist" ? "Shortlisted" : "Shortlist"}
-              </button>
-              <button type="button" onclick="setTrack('${esc(item.id)}', {status: '${tr.status === "visited" ? "none" : "visited"}'})"
-                class="action-btn ${tr.status === "visited" ? "is-visited" : ""}">
+              <button type="button" onclick="setDecision('${esc(item.id)}', 'yes')"
+                class="action-btn ${dec === "yes" ? "is-visited" : ""}">
                 ${SVG_CHECK}
-                ${tr.status === "visited" ? "Visited" : "Mark Visited"}
+                ${dec === "yes" ? "Yes (Saved)" : "Yes"}
               </button>
-              <button type="button" onclick="setTrack('${esc(item.id)}', {status: '${tr.status === "dismissed" ? "none" : "dismissed"}'})"
-                class="action-btn ${tr.status === "dismissed" ? "is-dismissed" : ""}">
-                ${tr.status === "dismissed" ? "Restore" : "Dismiss"}
+              <button type="button" onclick="setDecision('${esc(item.id)}', 'no')"
+                class="action-btn ${dec === "no" ? "is-dismissed" : ""}">
+                ${SVG_NO}
+                ${dec === "no" ? "No (Moved)" : "No"}
+              </button>
+              <button type="button" onclick="setTrack('${esc(item.id)}', {status: '${tr.status === "visited" ? "yes" : "visited"}', seen: true})"
+                class="action-btn ${tr.status === "visited" ? "is-shortlist" : ""}">
+                ${tr.status === "visited" ? "Visited" : "Mark Visited"}
               </button>
               <a href="${esc(item.url)}" target="_blank" rel="noopener" class="btn-primary">
                 Open Listing ${SVG_EXT}
@@ -1423,26 +1688,44 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       document.getElementById("f-rooms").value = "0";
       document.getElementById("f-max-price").value = "5000000";
       document.getElementById("f-max-price-lbl").textContent = "$5.0M";
+      document.getElementById("f-new-only").checked = false;
+      document.getElementById("f-unseen-only").checked = false;
       document.getElementById("f-pool").checked = false;
       document.getElementById("f-condo").checked = false;
-      document.getElementById("f-track").value = "active";
       renderAll();
     }
 
     function renderList() {
       const items = getFilteredListings();
+      const reviewItems = getFilteredListings("review");
+      const yesItems = getFilteredListings("yes");
+      const noItems = getFilteredListings("no");
+      const allItems = getFilteredListings("all");
       const container = document.getElementById("listing-cards");
 
+      document.getElementById("tab-count-review").textContent = reviewItems.length;
+      document.getElementById("tab-count-yes").textContent = yesItems.length;
+      document.getElementById("tab-count-no").textContent = noItems.length;
+      document.getElementById("tab-count-all").textContent = allItems.length;
+
       document.getElementById("kpi-count").textContent = items.length;
+      document.getElementById("kpi-new").textContent = LISTINGS.filter((x) => isAddedRecently(x)).length;
+      document.getElementById("kpi-unseen").textContent = LISTINGS.filter((x) => isUnseen(x)).length;
+      document.getElementById("kpi-yes").textContent = LISTINGS.filter((x) => getDecision(x.id) === "yes").length;
       const avg = items.length ? items.reduce((s, x) => s + x.price_clp, 0) / items.length : 0;
       document.getElementById("kpi-avg").textContent = items.length ? fmtShortCLP(avg) : "-";
-      document.getElementById("kpi-pool").textContent = items.filter((x) => x.has_pool).length;
-      document.getElementById("kpi-shortlist").textContent = LISTINGS.filter((x) => getTrack(x.id).status === "shortlist").length;
 
       if (!items.length) {
+        const emptyMsg = activeTab === "review"
+          ? "No undecided houses match your current filters."
+          : activeTab === "yes"
+          ? "No houses marked Yes yet. Click the check button on any listing to save it here."
+          : activeTab === "no"
+          ? "No houses marked No yet."
+          : "No houses match your current filters.";
         container.innerHTML = `
           <div class="empty-state">
-            <div>No houses match your current filters.</div>
+            <div>${emptyMsg}</div>
             <button type="button" class="btn-ghost" onclick="resetFilters()">Reset Filters</button>
           </div>
         `;
@@ -1451,30 +1734,51 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
       container.innerHTML = items.map((item) => {
         const tr = getTrack(item.id);
+        const dec = getDecision(item.id);
         const isSel = item.id === mapState.selectedId;
+        const unseen = isUnseen(item);
+        const isNew = isAddedRecently(item);
+        const rowCls = [
+          "listing-row",
+          unseen ? "is-unseen" : "",
+          isSel ? "is-selected" : ""
+        ].filter(Boolean).join(" ");
+
         return `
-          <button type="button" class="listing-row" aria-pressed="${isSel}" onclick="selectProperty('${esc(item.id)}')">
-            ${item.image
-              ? `<img src="${esc(item.image)}" alt="" class="listing-thumb" loading="lazy" onerror="this.outerHTML='<div class=\\'listing-thumb-empty\\'>No img</div>'" />`
-              : `<div class="listing-thumb-empty">No img</div>`}
-            <div class="listing-info">
-              <div class="listing-top">
-                <div class="listing-title">${esc(item.title)}</div>
-                <span class="listing-price tabular-nums">${fmtShortCLP(item.price_clp)}</span>
+          <div class="${rowCls}">
+            <button type="button" class="listing-main" aria-pressed="${isSel}" onclick="selectProperty('${esc(item.id)}')">
+              ${item.image
+                ? `<img src="${esc(item.image)}" alt="" class="listing-thumb" loading="lazy" onerror="this.outerHTML='<div class=\\'listing-thumb-empty\\'>No img</div>'" />`
+                : `<div class="listing-thumb-empty">No img</div>`}
+              <div class="listing-info">
+                <div class="listing-top">
+                  <div style="display:flex; align-items:center; gap:6px; min-width:0; flex:1;">
+                    ${unseen ? `<span class="unseen-dot" title="Not yet seen"></span>` : ""}
+                    <div class="listing-title">${esc(item.title)}</div>
+                  </div>
+                  <span class="listing-price tabular-nums">${fmtShortCLP(item.price_clp)}</span>
+                </div>
+                <div class="listing-zone">${esc(item.zone_label)} · ${esc(item.source)}${item.published_ago ? ` · ${esc(item.published_ago)}` : ""}</div>
+                <div class="listing-specs tabular-nums">
+                  <span>${item.bedrooms}D</span>
+                  <span>${item.bathrooms || "-"}B</span>
+                  <span>~${item.estimated_rooms} rooms</span>
+                  ${item.built_m2 ? `<span>${item.built_m2} m²</span>` : ""}
+                  ${isNew ? `<span class="tag tag-new">New</span>` : ""}
+                  ${item.has_pool ? `<span class="tag tag-pool">Pool</span>` : ""}
+                </div>
+                ${tr.note ? `<div class="listing-note">Note: ${esc(tr.note)}</div>` : ""}
               </div>
-              <div class="listing-zone">${esc(item.zone_label)} · ${esc(item.source)}</div>
-              <div class="listing-specs tabular-nums">
-                <span>${item.bedrooms}D</span>
-                <span>${item.bathrooms || "-"}B</span>
-                <span>~${item.estimated_rooms} rooms</span>
-                ${item.built_m2 ? `<span>${item.built_m2} m²</span>` : ""}
-                ${item.has_pool ? `<span class="tag tag-pool">Pool</span>` : ""}
-                ${tr.status === "shortlist" ? `<span style="color:var(--shortlist); display:inline-flex; align-items:center;" title="Shortlisted">${SVG_STAR}</span>` : ""}
-                ${tr.status === "visited" ? `<span style="color:var(--visited); display:inline-flex; align-items:center;" title="Visited">${SVG_CHECK}</span>` : ""}
-              </div>
-              ${tr.note ? `<div class="listing-note">Note: ${esc(tr.note)}</div>` : ""}
+            </button>
+            <div class="listing-quick-actions" aria-label="Quick decision">
+              <button type="button" class="quick-btn yes" aria-pressed="${dec === "yes"}" aria-label="Say Yes to ${esc(item.title)}" title="Yes — move to Yes list" onclick="setDecision('${esc(item.id)}', 'yes')">
+                ${SVG_CHECK}
+              </button>
+              <button type="button" class="quick-btn no" aria-pressed="${dec === "no"}" aria-label="Say No to ${esc(item.title)}" title="No — move to No list" onclick="setDecision('${esc(item.id)}', 'no')">
+                ${SVG_NO}
+              </button>
             </div>
-          </button>
+          </div>
         `;
       }).join("");
     }
@@ -1488,7 +1792,17 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       }
     }
 
-    ["f-search", "f-zone", "f-beds", "f-rooms", "f-pool", "f-condo", "f-track", "f-sort"].forEach((id) => {
+    document.querySelectorAll(".triage-tab").forEach((tabBtn) => {
+      tabBtn.addEventListener("click", () => {
+        activeTab = tabBtn.dataset.tab;
+        document.querySelectorAll(".triage-tab").forEach((b) => b.setAttribute("aria-selected", String(b === tabBtn)));
+        renderAll();
+      });
+    });
+
+    document.getElementById("btn-mark-seen").addEventListener("click", markAllVisibleSeen);
+
+    ["f-search", "f-zone", "f-beds", "f-rooms", "f-new-only", "f-unseen-only", "f-pool", "f-condo", "f-sort"].forEach((id) => {
       document.getElementById(id).addEventListener("input", renderAll);
       document.getElementById(id).addEventListener("change", renderAll);
     });
@@ -1512,7 +1826,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     resizeCanvas();
     renderAll();
     if (LISTINGS.length) {
-      selectProperty(LISTINGS[0].id);
+      selectProperty(LISTINGS[0].id, false);
     }
   </script>
 </body>
