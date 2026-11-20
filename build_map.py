@@ -17,62 +17,64 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Santiago House Hunter — La Dehesa &amp; Alto Las Condes</title>
+  <title>Casa Quest · Santiago — La Dehesa &amp; Alto Las Condes</title>
   <style>
     :root {
-      --bg: #0c1118;
-      --surface: #131a24;
-      --surface-hover: #192230;
-      --surface-active: #1d2838;
-      --border: rgba(226, 232, 240, 0.10);
-      --border-strong: rgba(226, 232, 240, 0.18);
-      --text: #edf2f7;
-      --text-secondary: #a0aec0;
-      --text-muted: #8b9bb0;
-      --accent: #2563eb;
-      --accent-soft: rgba(59, 130, 246, 0.16);
-      --accent-text: #7db1ff;
-      --pool: #22d3ee;
-      --pool-soft: rgba(34, 211, 238, 0.14);
-      --shortlist: #f5b942;
-      --shortlist-soft: rgba(245, 185, 66, 0.15);
-      --visited: #34d399;
-      --visited-soft: rgba(52, 211, 153, 0.14);
-      --dismissed: #f87171;
-      --dismissed-soft: rgba(248, 113, 113, 0.14);
-      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.28);
-      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.36);
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 12px;
+      --bg: #f1f7f6;
+      --surface: #ffffff;
+      --surface-hover: #e7f2f0;
+      --surface-active: #dcf0ec;
+      --border: rgba(18, 38, 36, 0.11);
+      --border-strong: rgba(18, 38, 36, 0.22);
+      --text: #132422;
+      --text-secondary: #2e4542;
+      --text-muted: #4b6360;
+      --accent: #c84422;
+      --accent-soft: rgba(200, 68, 34, 0.12);
+      --accent-text: #b33818;
+      --pool: #0e7490;
+      --pool-soft: rgba(14, 116, 144, 0.11);
+      --yes: #0f766e;
+      --yes-soft: rgba(15, 118, 110, 0.12);
+      --no: #be123c;
+      --no-soft: rgba(190, 18, 60, 0.10);
+      --sun: #92400e;
+      --sun-soft: rgba(217, 119, 6, 0.14);
+      --ref-pin: #c84422;
+      --shadow-sm: 0 2px 6px rgba(18, 38, 36, 0.06);
+      --shadow-md: 0 10px 28px rgba(18, 38, 36, 0.12);
+      --radius-sm: 10px;
+      --radius-md: 14px;
+      --radius-lg: 18px;
       --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-      color-scheme: dark;
+      color-scheme: light;
     }
 
-    html.light {
-      --bg: #f4f6f8;
-      --surface: #ffffff;
-      --surface-hover: #f8fafc;
-      --surface-active: #eef4ff;
-      --border: rgba(15, 23, 42, 0.10);
-      --border-strong: rgba(15, 23, 42, 0.18);
-      --text: #0f172a;
-      --text-secondary: #334155;
-      --text-muted: #526075;
-      --accent: #2563eb;
-      --accent-soft: rgba(37, 99, 235, 0.10);
-      --accent-text: #1d4ed8;
-      --pool: #0891b2;
-      --pool-soft: rgba(8, 145, 178, 0.10);
-      --shortlist: #b45309;
-      --shortlist-soft: rgba(217, 119, 6, 0.12);
-      --visited: #047857;
-      --visited-soft: rgba(4, 120, 87, 0.10);
-      --dismissed: #be123c;
-      --dismissed-soft: rgba(190, 18, 60, 0.10);
-      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
-      --shadow-md: 0 8px 24px rgba(15, 23, 42, 0.10);
-      color-scheme: light;
+    html.dark {
+      --bg: #121918;
+      --surface: #1a2422;
+      --surface-hover: #222f2d;
+      --surface-active: #273835;
+      --border: rgba(236, 245, 243, 0.11);
+      --border-strong: rgba(236, 245, 243, 0.20);
+      --text: #edf5f3;
+      --text-secondary: #c4d6d3;
+      --text-muted: #98b0ac;
+      --accent: #c84422;
+      --accent-soft: rgba(255, 140, 107, 0.16);
+      --accent-text: #ff9475;
+      --pool: #22d3ee;
+      --pool-soft: rgba(34, 211, 238, 0.14);
+      --yes: #34d399;
+      --yes-soft: rgba(52, 211, 153, 0.14);
+      --no: #fb7185;
+      --no-soft: rgba(251, 113, 133, 0.14);
+      --sun: #fbbf24;
+      --sun-soft: rgba(251, 191, 36, 0.15);
+      --ref-pin: #ff7a59;
+      --shadow-sm: 0 2px 6px rgba(0, 0, 0, 0.28);
+      --shadow-md: 0 10px 28px rgba(0, 0, 0, 0.42);
+      color-scheme: dark;
     }
 
     *, *::before, *::after { box-sizing: border-box; }
@@ -87,7 +89,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       padding: 0;
       background: var(--bg);
       color: var(--text);
-      font-family: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: "Nunito", "DM Sans", ui-rounded, ui-sans-serif, system-ui, -apple-system, sans-serif;
       font-size: 14px;
       line-height: 1.45;
       -webkit-font-smoothing: antialiased;
@@ -114,12 +116,11 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
     .tabular-nums { font-variant-numeric: tabular-nums; }
 
-    /* Custom scrollbars */
     * {
       scrollbar-width: thin;
       scrollbar-color: var(--border-strong) transparent;
     }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar { width: 7px; height: 7px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 999px; }
 
@@ -141,7 +142,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       justify-content: space-between;
       gap: 12px 20px;
       padding-bottom: 14px;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 2px dashed var(--border);
     }
 
     .brand-group {
@@ -157,21 +158,28 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       gap: 10px;
     }
 
+    .brand-icon {
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
     .brand-title {
       margin: 0;
-      font-size: 1.25rem;
-      font-weight: 650;
+      font-size: 1.3rem;
+      font-weight: 800;
       letter-spacing: -0.02em;
       line-height: 1.2;
     }
 
     .brand-badge {
       font-size: 0.75rem;
-      font-weight: 500;
-      padding: 2px 9px;
+      font-weight: 700;
+      padding: 3px 10px;
       border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent-text);
+      background: var(--sun-soft);
+      color: var(--sun);
       white-space: nowrap;
     }
 
@@ -181,12 +189,11 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       color: var(--text-muted);
     }
 
-    /* KPI Strip (flat inline stats separated by hairlines) */
     .header-actions {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
     }
 
     .kpi-strip {
@@ -200,7 +207,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     .kpi-item {
       display: flex;
       align-items: baseline;
-      gap: 6px;
+      gap: 5px;
     }
 
     .kpi-item + .kpi-item {
@@ -208,61 +215,63 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       border-left: 1px solid var(--border);
     }
 
-    .kpi-label { color: var(--text-muted); }
-    .kpi-val { font-weight: 600; font-size: 0.9375rem; }
-    .kpi-val.pool { color: var(--pool); }
-    .kpi-val.shortlist { color: var(--shortlist); }
+    .kpi-label { color: var(--text-muted); font-weight: 500; }
+    .kpi-val { font-weight: 800; font-size: 0.9375rem; }
 
-    .btn-ghost {
+    .btn-pill {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       min-height: 36px;
-      padding: 0 12px;
-      border-radius: var(--radius-sm);
+      padding: 0 14px;
+      border-radius: 999px;
       border: 1px solid var(--border-strong);
-      background: transparent;
+      background: var(--surface);
       color: var(--text);
       font-size: 0.8125rem;
-      font-weight: 500;
+      font-weight: 700;
       cursor: pointer;
-      transition: background-color 140ms var(--ease-out), border-color 140ms var(--ease-out);
+      box-shadow: var(--shadow-sm);
+      transition: transform 120ms var(--ease-out), background-color 140ms var(--ease-out), border-color 140ms var(--ease-out);
     }
-    .btn-ghost:hover {
+    .btn-pill:hover {
       background: var(--surface-hover);
-      border-color: var(--text-muted);
+      border-color: var(--accent);
+      transform: translateY(-1px);
     }
 
-    /* Filter Toolbar (flat bar, no nested boxes) */
+    /* Filter Toolbar */
     .filter-bar {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       gap: 8px 10px;
-      padding: 10px 0;
+      padding: 6px 0 12px;
       border-bottom: 1px solid var(--border);
     }
 
     .control-input,
     .control-select {
       min-height: 36px;
-      padding: 0 10px;
-      border-radius: var(--radius-sm);
+      padding: 0 12px;
+      border-radius: 999px;
       border: 1px solid var(--border-strong);
       background: var(--surface);
       color: var(--text);
       font-size: 0.8125rem;
+      font-weight: 600;
       transition: border-color 140ms var(--ease-out);
     }
     .control-input:hover,
     .control-select:hover {
-      border-color: var(--text-muted);
+      border-color: var(--accent);
     }
     .control-input::placeholder {
       color: var(--text-muted);
+      font-weight: 500;
     }
     .search-input {
-      width: 210px;
+      width: 215px;
       max-width: 100%;
     }
 
@@ -271,12 +280,13 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       align-items: center;
       gap: 8px;
       min-height: 36px;
-      padding: 0 4px;
+      padding: 0 6px;
       font-size: 0.8125rem;
+      font-weight: 600;
       color: var(--text-secondary);
     }
     .range-group input[type="range"] {
-      width: 96px;
+      width: 94px;
       accent-color: var(--accent);
       cursor: pointer;
     }
@@ -286,10 +296,12 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       align-items: center;
       gap: 6px;
       min-height: 36px;
-      padding: 0 10px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border);
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
       font-size: 0.8125rem;
+      font-weight: 600;
       color: var(--text-secondary);
       cursor: pointer;
       user-select: none;
@@ -297,16 +309,14 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     }
     .check-pill:hover {
       background: var(--surface-hover);
-      border-color: var(--border-strong);
+      border-color: var(--accent);
     }
     .check-pill input {
       accent-color: var(--accent);
       cursor: pointer;
     }
 
-    .sort-select {
-      margin-left: auto;
-    }
+    .sort-select { margin-left: auto; }
 
     /* Main Workspace Grid */
     .workspace-grid {
@@ -317,12 +327,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     }
 
     @media (max-width: 1024px) {
-      .workspace-grid {
-        grid-template-columns: 1fr;
-      }
-      .sort-select {
-        margin-left: 0;
-      }
+      .workspace-grid { grid-template-columns: 1fr; }
+      .sort-select { margin-left: 0; }
     }
 
     @media (max-width: 640px) {
@@ -341,15 +347,15 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
     .map-frame {
       position: relative;
-      height: 480px;
+      height: 490px;
       border-radius: var(--radius-lg);
       overflow: hidden;
-      border: 1px solid var(--border);
-      background: var(--surface);
+      border: 1px solid var(--border-strong);
+      box-shadow: var(--shadow-sm);
     }
 
     @media (max-width: 640px) {
-      .map-frame { height: 360px; }
+      .map-frame { height: 370px; }
     }
 
     #map-canvas {
@@ -365,6 +371,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       position: absolute;
       top: 10px;
       left: 10px;
+      right: 54px;
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
@@ -372,23 +379,22 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
     .map-chip {
       min-height: 32px;
-      padding: 0 11px;
-      border-radius: var(--radius-sm);
+      padding: 0 12px;
+      border-radius: 999px;
       border: 1px solid var(--border-strong);
-      background: rgba(19, 26, 36, 0.88);
+      background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(8px);
       color: var(--text);
       font-size: 0.75rem;
-      font-weight: 500;
+      font-weight: 700;
       cursor: pointer;
+      box-shadow: var(--shadow-sm);
       transition: background-color 140ms var(--ease-out), border-color 140ms var(--ease-out);
     }
-    html.light .map-chip {
-      background: rgba(255, 255, 255, 0.92);
+    html.dark .map-chip {
+      background: rgba(34, 28, 24, 0.90);
     }
-    .map-chip:hover {
-      border-color: var(--accent);
-    }
+    .map-chip:hover { border-color: var(--accent); }
     .map-chip[aria-pressed="true"] {
       background: var(--accent);
       border-color: var(--accent);
@@ -409,18 +415,19 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       height: 36px;
       display: grid;
       place-items: center;
-      border-radius: var(--radius-sm);
+      border-radius: 999px;
       border: 1px solid var(--border-strong);
-      background: rgba(19, 26, 36, 0.88);
+      background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(8px);
       color: var(--text);
-      font-size: 1rem;
-      font-weight: 600;
+      font-size: 1.05rem;
+      font-weight: 700;
       cursor: pointer;
+      box-shadow: var(--shadow-sm);
       transition: border-color 140ms var(--ease-out);
     }
-    html.light .zoom-btn {
-      background: rgba(255, 255, 255, 0.92);
+    html.dark .zoom-btn {
+      background: rgba(34, 28, 24, 0.90);
     }
     .zoom-btn:hover { border-color: var(--accent); }
 
@@ -428,26 +435,28 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       position: absolute;
       bottom: 10px;
       left: 10px;
-      padding: 6px 11px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border);
-      background: rgba(19, 26, 36, 0.88);
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+      background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(8px);
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       gap: 12px;
       font-size: 0.75rem;
+      font-weight: 600;
       color: var(--text-secondary);
+      box-shadow: var(--shadow-sm);
     }
-    html.light .map-legend {
-      background: rgba(255, 255, 255, 0.92);
+    html.dark .map-legend {
+      background: rgba(34, 28, 24, 0.90);
     }
 
     .legend-item {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
     }
     .legend-dot {
       width: 9px;
@@ -455,20 +464,14 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       border-radius: 50%;
       display: inline-block;
     }
-    .legend-square {
-      width: 8px;
-      height: 8px;
-      border-radius: 2px;
-      display: inline-block;
-    }
 
     .map-tooltip {
       position: absolute;
       z-index: 20;
       pointer-events: none;
-      max-width: 250px;
-      padding: 8px 10px;
-      border-radius: var(--radius-sm);
+      max-width: 260px;
+      padding: 8px 12px;
+      border-radius: var(--radius-md);
       border: 1px solid var(--border-strong);
       background: var(--surface);
       box-shadow: var(--shadow-md);
@@ -480,8 +483,9 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     .inspector-panel {
       padding: 16px;
       border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-strong);
       background: var(--surface);
+      box-shadow: var(--shadow-sm);
     }
 
     .inspector-empty {
@@ -501,15 +505,15 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     }
 
     .inspector-thumb {
-      width: 152px;
-      height: 116px;
+      width: 156px;
+      height: 120px;
       object-fit: cover;
       border-radius: var(--radius-md);
       background: var(--surface-hover);
       flex-shrink: 0;
     }
     @media (max-width: 640px) {
-      .inspector-thumb { width: 100%; height: 180px; }
+      .inspector-thumb { width: 100%; height: 185px; }
     }
 
     .inspector-body {
@@ -529,9 +533,9 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
     .inspector-title {
       margin: 0;
-      font-size: 1rem;
-      font-weight: 600;
-      line-height: 1.3;
+      font-size: 1.05rem;
+      font-weight: 800;
+      line-height: 1.28;
     }
 
     .inspector-meta {
@@ -540,18 +544,28 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       color: var(--text-muted);
     }
 
+    .inspector-distances {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent-text);
+    }
+
     .inspector-price {
       text-align: right;
       flex-shrink: 0;
     }
     .inspector-price-clp {
-      font-size: 1rem;
-      font-weight: 700;
+      font-size: 1.05rem;
+      font-weight: 800;
       color: var(--accent-text);
     }
     .inspector-price-uf {
       font-size: 0.75rem;
       color: var(--text-muted);
+      font-weight: 600;
     }
 
     .inspector-specs {
@@ -559,12 +573,12 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       flex-wrap: wrap;
       gap: 8px 16px;
       padding: 8px 0;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
+      border-top: 1px dashed var(--border);
+      border-bottom: 1px dashed var(--border);
       font-size: 0.8125rem;
       color: var(--text-secondary);
     }
-    .inspector-specs strong { color: var(--text); font-weight: 600; }
+    .inspector-specs strong { color: var(--text); font-weight: 800; }
 
     .tag-row {
       display: flex;
@@ -573,18 +587,18 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     }
     .tag {
       font-size: 0.75rem;
-      font-weight: 500;
-      padding: 2px 8px;
+      font-weight: 700;
+      padding: 2px 9px;
       border-radius: 999px;
     }
+    .tag-new { background: var(--yes-soft); color: var(--yes); }
     .tag-pool { background: var(--pool-soft); color: var(--pool); }
-    .tag-quincho { background: rgba(251, 146, 60, 0.14); color: #fb923c; }
-    .tag-condo { background: var(--visited-soft); color: var(--visited); }
-    .tag-service { background: rgba(192, 132, 252, 0.14); color: #c084fc; }
-    .tag-furnished { background: rgba(244, 114, 182, 0.14); color: #f472b6; }
-    html.light .tag-quincho { color: #c2410c; }
-    html.light .tag-service { color: #7e22ce; }
-    html.light .tag-furnished { color: #be185d; }
+    .tag-quincho { background: var(--sun-soft); color: var(--sun); }
+    .tag-condo { background: var(--accent-soft); color: var(--accent-text); }
+    .tag-service { background: rgba(77, 124, 15, 0.12); color: #3f6212; }
+    .tag-furnished { background: rgba(219, 39, 119, 0.12); color: #be185d; }
+    html.dark .tag-service { color: #bef264; }
+    html.dark .tag-furnished { color: #f9a8d4; }
 
     .inspector-excerpt {
       margin: 0;
@@ -608,13 +622,13 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       align-items: center;
       gap: 6px;
       min-height: 36px;
-      padding: 0 11px;
-      border-radius: var(--radius-sm);
+      padding: 0 13px;
+      border-radius: 999px;
       border: 1px solid var(--border-strong);
       background: transparent;
       color: var(--text-secondary);
       font-size: 0.8125rem;
-      font-weight: 500;
+      font-weight: 700;
       cursor: pointer;
       transition: background-color 140ms var(--ease-out), border-color 140ms var(--ease-out), color 140ms var(--ease-out);
     }
@@ -622,20 +636,20 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       background: var(--surface-hover);
       color: var(--text);
     }
-    .action-btn.is-shortlist {
-      background: var(--shortlist-soft);
-      border-color: var(--shortlist);
-      color: var(--shortlist);
+    .action-btn.is-yes {
+      background: var(--yes-soft);
+      border-color: var(--yes);
+      color: var(--yes);
+    }
+    .action-btn.is-no {
+      background: var(--no-soft);
+      border-color: var(--no);
+      color: var(--no);
     }
     .action-btn.is-visited {
-      background: var(--visited-soft);
-      border-color: var(--visited);
-      color: var(--visited);
-    }
-    .action-btn.is-dismissed {
-      background: var(--dismissed-soft);
-      border-color: var(--dismissed);
-      color: var(--dismissed);
+      background: var(--sun-soft);
+      border-color: var(--sun);
+      color: var(--sun);
     }
 
     .btn-primary {
@@ -644,12 +658,12 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       align-items: center;
       gap: 6px;
       min-height: 36px;
-      padding: 0 14px;
-      border-radius: var(--radius-sm);
+      padding: 0 15px;
+      border-radius: 999px;
       background: var(--accent);
       color: #ffffff;
       font-size: 0.8125rem;
-      font-weight: 600;
+      font-weight: 700;
       text-decoration: none;
       transition: opacity 140ms var(--ease-out);
     }
@@ -658,9 +672,9 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     .note-input {
       width: 100%;
       min-height: 36px;
-      padding: 0 10px;
+      padding: 0 12px;
       border-radius: var(--radius-sm);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-strong);
       background: var(--bg);
       color: var(--text);
       font-size: 0.8125rem;
@@ -670,15 +684,12 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       outline: none;
     }
 
-    /* Right Column: Flat List Container with Triage Tabs & Hairline Dividers */
+    /* Right Column: Triage Tabs + Flat List */
     .listings-panel {
-      border-radius: var(--radius-lg);
-      border: 1px solid var(--border);
-      background: var(--surface);
       display: flex;
       flex-direction: column;
-      max-height: 760px;
-      overflow: hidden;
+      gap: 10px;
+      max-height: 770px;
     }
 
     .triage-bar {
@@ -686,9 +697,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      padding: 8px 12px;
-      border-bottom: 1px solid var(--border);
-      background: var(--surface);
+      padding: 4px 0;
       flex-shrink: 0;
     }
 
@@ -701,15 +710,15 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     .triage-tab {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       min-height: 32px;
-      padding: 0 10px;
-      border-radius: var(--radius-sm);
+      padding: 0 11px;
+      border-radius: 999px;
       border: 1px solid transparent;
       background: transparent;
       color: var(--text-muted);
       font-size: 0.8125rem;
-      font-weight: 500;
+      font-weight: 700;
       cursor: pointer;
       transition: background-color 140ms var(--ease-out), color 140ms var(--ease-out), border-color 140ms var(--ease-out);
     }
@@ -721,17 +730,16 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       background: var(--accent-soft);
       border-color: var(--accent);
       color: var(--accent-text);
-      font-weight: 600;
     }
     .triage-tab[data-tab="yes"][aria-selected="true"] {
-      background: var(--visited-soft);
-      border-color: var(--visited);
-      color: var(--visited);
+      background: var(--yes-soft);
+      border-color: var(--yes);
+      color: var(--yes);
     }
     .triage-tab[data-tab="no"][aria-selected="true"] {
-      background: var(--dismissed-soft);
-      border-color: var(--dismissed);
-      color: var(--dismissed);
+      background: var(--no-soft);
+      border-color: var(--no);
+      color: var(--no);
     }
 
     .triage-count {
@@ -741,13 +749,13 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
     .mark-seen-btn {
       min-height: 30px;
-      padding: 0 9px;
-      border-radius: var(--radius-sm);
-      border: 1px solid var(--border);
+      padding: 0 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
       background: transparent;
       color: var(--text-muted);
       font-size: 0.75rem;
-      font-weight: 500;
+      font-weight: 700;
       cursor: pointer;
       white-space: nowrap;
       transition: background-color 140ms var(--ease-out), color 140ms var(--ease-out);
@@ -760,6 +768,10 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     .listings-scroll {
       overflow-y: auto;
       flex: 1;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      box-shadow: var(--shadow-sm);
     }
 
     .listing-row {
@@ -770,15 +782,12 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     }
     .listing-row:last-child { border-bottom: none; }
     .listing-row.is-unseen {
-      background: rgba(79, 143, 247, 0.05);
-    }
-    html.light .listing-row.is-unseen {
-      background: rgba(37, 99, 235, 0.04);
+      background: rgba(200, 68, 34, 0.045);
     }
     .listing-row:hover { background: var(--surface-hover); }
     .listing-row.is-selected {
       background: var(--surface-active);
-      box-shadow: inset 3px 0 0 var(--accent);
+      box-shadow: inset 4px 0 0 var(--accent);
     }
 
     .listing-main {
@@ -808,38 +817,34 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       height: 34px;
       display: grid;
       place-items: center;
-      border-radius: var(--radius-sm);
+      border-radius: 999px;
       border: 1px solid var(--border-strong);
       background: transparent;
       color: var(--text-muted);
       cursor: pointer;
-      transition: background-color 140ms var(--ease-out), border-color 140ms var(--ease-out), color 140ms var(--ease-out);
+      transition: transform 120ms var(--ease-out), background-color 140ms var(--ease-out), border-color 140ms var(--ease-out), color 140ms var(--ease-out);
     }
+    .quick-btn:hover { transform: scale(1.06); }
     .quick-btn.yes:hover,
     .quick-btn.yes[aria-pressed="true"] {
-      background: var(--visited-soft);
-      border-color: var(--visited);
-      color: var(--visited);
+      background: var(--yes-soft);
+      border-color: var(--yes);
+      color: var(--yes);
     }
     .quick-btn.no:hover,
     .quick-btn.no[aria-pressed="true"] {
-      background: var(--dismissed-soft);
-      border-color: var(--dismissed);
-      color: var(--dismissed);
+      background: var(--no-soft);
+      border-color: var(--no);
+      color: var(--no);
     }
 
     .unseen-dot {
-      width: 7px;
-      height: 7px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      background: var(--accent-text);
+      background: var(--accent);
       flex-shrink: 0;
       display: inline-block;
-    }
-
-    .tag-new {
-      background: var(--visited-soft);
-      color: var(--visited);
     }
 
     .listing-thumb {
@@ -880,7 +885,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
     .listing-title {
       font-size: 0.875rem;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text);
       white-space: nowrap;
       overflow: hidden;
@@ -889,7 +894,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
     .listing-price {
       font-size: 0.875rem;
-      font-weight: 700;
+      font-weight: 800;
       color: var(--accent-text);
       flex-shrink: 0;
     }
@@ -906,16 +911,18 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       margin-top: 2px;
       font-size: 0.75rem;
+      font-weight: 600;
       color: var(--text-secondary);
     }
 
     .listing-note {
       margin-top: 2px;
       font-size: 0.75rem;
-      color: var(--shortlist);
+      font-weight: 600;
+      color: var(--sun);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -929,6 +936,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       flex-direction: column;
       align-items: center;
       gap: 12px;
+      font-weight: 600;
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -945,10 +953,17 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     <header class="app-header">
       <div class="brand-group">
         <div class="brand-title-row">
-          <h1 class="brand-title">Santiago House Hunter</h1>
+          <span class="brand-icon" aria-hidden="true">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 10.5 12 3l9 7.5"></path>
+              <path d="M5 9.5V20a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5"></path>
+              <path d="M9 21v-6a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v6"></path>
+            </svg>
+          </span>
+          <h1 class="brand-title">Casa Quest · Santiago</h1>
           <span class="brand-badge">4–6 Dorm · $3M–$5M CLP</span>
         </div>
-        <p class="brand-subtitle" id="meta-subtitle">Loading listings...</p>
+        <p class="brand-subtitle" id="meta-subtitle">Loading your future home...</p>
       </div>
 
       <div class="header-actions">
@@ -958,16 +973,16 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
             <span id="kpi-count" class="kpi-val tabular-nums">0</span>
           </div>
           <div class="kpi-item">
-            <span class="kpi-label">New (24h)</span>
-            <span id="kpi-new" class="kpi-val tabular-nums" style="color: var(--visited);">0</span>
+            <span class="kpi-label">Fresh (24h)</span>
+            <span id="kpi-new" class="kpi-val tabular-nums" style="color: var(--yes);">0</span>
           </div>
           <div class="kpi-item">
-            <span class="kpi-label">Unseen</span>
+            <span class="kpi-label">Not Peeked</span>
             <span id="kpi-unseen" class="kpi-val tabular-nums" style="color: var(--accent-text);">0</span>
           </div>
           <div class="kpi-item">
-            <span class="kpi-label">Yes</span>
-            <span id="kpi-yes" class="kpi-val tabular-nums" style="color: var(--visited);">0</span>
+            <span class="kpi-label">Love It</span>
+            <span id="kpi-yes" class="kpi-val tabular-nums" style="color: var(--yes);">0</span>
           </div>
           <div class="kpi-item">
             <span class="kpi-label">Avg Rent</span>
@@ -975,21 +990,21 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
           </div>
         </div>
 
-        <button id="btn-theme" type="button" class="btn-ghost" aria-label="Toggle light or dark theme" title="Toggle light/dark theme">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <button id="btn-theme" type="button" class="btn-pill" aria-label="Toggle light or dark theme" title="Switch between sunlit and night mode">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="12" cy="12" r="4"></circle>
             <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
           </svg>
-          <span id="theme-label">Light</span>
+          <span id="theme-label">Night</span>
         </button>
 
-        <button id="btn-export" type="button" class="btn-ghost" title="Export your decisions &amp; notes as JSON">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <button id="btn-export" type="button" class="btn-pill" title="Export your decisions &amp; notes as JSON">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
             <polyline points="7 10 12 15 17 10"></polyline>
             <line x1="12" y1="15" x2="12" y2="3"></line>
           </svg>
-          Export Tracker
+          Export
         </button>
       </div>
     </header>
@@ -997,7 +1012,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     <!-- Filter Toolbar -->
     <section class="filter-bar" aria-label="Property filters">
       <input id="f-search" type="search" aria-label="Search street, sector, or title"
-        placeholder="Search street, sector, title..." class="control-input search-input" />
+        placeholder="Search street, sector, vibe..." class="control-input search-input" />
 
       <select id="f-zone" aria-label="Filter by zone" class="control-select">
         <option value="all">All Zones</option>
@@ -1027,17 +1042,17 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
       <label class="check-pill">
         <input id="f-new-only" type="checkbox" />
-        <span>New / Past 24h</span>
+        <span>Fresh (24h)</span>
       </label>
 
       <label class="check-pill">
         <input id="f-unseen-only" type="checkbox" />
-        <span>Unseen Only</span>
+        <span>Not Peeked Yet</span>
       </label>
 
       <label class="check-pill">
         <input id="f-pool" type="checkbox" />
-        <span>Pool Only</span>
+        <span>With Pool</span>
       </label>
 
       <label class="check-pill">
@@ -1046,7 +1061,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       </label>
 
       <select id="f-sort" aria-label="Sort listings" class="control-select sort-select">
-        <option value="unseen_first">Unseen &amp; New First</option>
+        <option value="unseen_first">Fresh &amp; Unseen First</option>
         <option value="price_asc">Price: Low to High</option>
         <option value="price_desc">Price: High to Low</option>
         <option value="beds_desc">Bedrooms: Most First</option>
@@ -1061,11 +1076,11 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       <!-- Left: Interactive Map + Selected Inspector -->
       <div class="left-col">
         <div class="map-frame">
-          <canvas id="map-canvas" aria-label="Interactive map of house listings in La Dehesa and Alto Las Condes"></canvas>
+          <canvas id="map-canvas" aria-label="Interactive map of house listings with Colegio Newland and Alto Las Condes references"></canvas>
 
-          <div class="map-overlay-top-left" role="group" aria-label="Jump to zone">
+          <div class="map-overlay-top-left" role="group" aria-label="Jump to zone or reference">
             <button type="button" data-jump="all" class="map-chip" aria-pressed="true">Both Zones</button>
-            <button type="button" data-jump="la_dehesa" class="map-chip" aria-pressed="false">La Dehesa</button>
+            <button type="button" data-jump="newland" class="map-chip" aria-pressed="false">Colegio Newland</button>
             <button type="button" data-jump="alto_las_condes" class="map-chip" aria-pressed="false">Alto Las Condes</button>
           </div>
 
@@ -1074,20 +1089,20 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
             <button id="zoom-out" type="button" class="zoom-btn" aria-label="Zoom out">−</button>
           </div>
 
-          <div class="map-legend" aria-label="Map legend">
-            <span class="legend-item"><span class="legend-dot" style="background: transparent; border: 2px solid var(--accent-text); width: 11px; height: 11px;"></span> New / Unseen</span>
-            <span class="legend-item"><span class="legend-dot" style="background: var(--pool);"></span> Pool</span>
-            <span class="legend-item"><span class="legend-dot" style="background: #818cf8;"></span> Standard</span>
-            <span class="legend-item"><span class="legend-dot" style="background: var(--visited);"></span> Yes</span>
-            <span class="legend-item"><span class="legend-square" style="background: #fb7185;"></span> Landmark</span>
-          </div>
+          <aside id="map-tooltip" class="map-tooltip hidden" role="status"></aside>
+        </div>
 
-          <div id="map-tooltip" class="map-tooltip hidden" role="status"></div>
+        <div class="map-legend" aria-label="Map legend" style="position: static; box-shadow: none; background: var(--surface);">
+          <span class="legend-item"><span class="legend-dot" style="background: transparent; border: 2px solid var(--accent); width: 11px; height: 11px;"></span> Fresh / Unseen</span>
+          <span class="legend-item"><span class="legend-dot" style="background: var(--pool);"></span> Pool</span>
+          <span class="legend-item"><span class="legend-dot" style="background: #0284c7;"></span> Standard</span>
+          <span class="legend-item"><span class="legend-dot" style="background: var(--yes);"></span> Love It</span>
+          <span class="legend-item"><span class="legend-dot" style="background: var(--ref-pin); border-radius: 3px;"></span> Newland / Alto LC</span>
         </div>
 
         <section id="inspector" class="inspector-panel" aria-label="Selected property details">
           <div class="inspector-empty">
-            Click any house pin on the map or any listing on the right to inspect full details, amenities, and add notes.
+            Click any house pin on the map or any card on the right to peek inside!
           </div>
         </section>
       </div>
@@ -1097,20 +1112,20 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         <div class="triage-bar">
           <div class="triage-tabs" role="tablist" aria-label="Triage lists">
             <button type="button" role="tab" class="triage-tab" data-tab="review" aria-selected="true">
-              To Review <span id="tab-count-review" class="triage-count tabular-nums">0</span>
+              Still Deciding <span id="tab-count-review" class="triage-count tabular-nums">0</span>
             </button>
             <button type="button" role="tab" class="triage-tab" data-tab="yes" aria-selected="false">
-              Yes <span id="tab-count-yes" class="triage-count tabular-nums">0</span>
+              Love It! <span id="tab-count-yes" class="triage-count tabular-nums">0</span>
             </button>
             <button type="button" role="tab" class="triage-tab" data-tab="no" aria-selected="false">
-              No <span id="tab-count-no" class="triage-count tabular-nums">0</span>
+              Nope <span id="tab-count-no" class="triage-count tabular-nums">0</span>
             </button>
             <button type="button" role="tab" class="triage-tab" data-tab="all" aria-selected="false">
               All <span id="tab-count-all" class="triage-count tabular-nums">0</span>
             </button>
           </div>
-          <button id="btn-mark-seen" type="button" class="mark-seen-btn" title="Mark all currently visible houses as seen">
-            Mark All Seen
+          <button id="btn-mark-seen" type="button" class="mark-seen-btn" title="Mark all currently visible houses as peeked">
+            Mark All Peeked
           </button>
         </div>
         <div class="listings-scroll" id="listing-cards"></div>
@@ -1123,7 +1138,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     const LISTINGS = PAYLOAD.listings || [];
 
     const STORAGE_KEY = "santiago_house_tracker_v1";
-    const THEME_KEY = "santiago_house_theme_v1";
+    const THEME_KEY = "santiago_house_theme_v2";
     let tracker = {};
     try {
       tracker = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
@@ -1210,42 +1225,55 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       }[ch]));
     }
 
-    // Theme initialization & toggle
+    // Theme initialization & toggle (default: sunlit light mode)
     const themeBtn = document.getElementById("btn-theme");
     const themeLabel = document.getElementById("theme-label");
     function applyTheme(mode) {
-      document.documentElement.classList.toggle("light", mode === "light");
-      themeLabel.textContent = mode === "light" ? "Dark" : "Light";
+      document.documentElement.classList.toggle("dark", mode === "dark");
+      themeLabel.textContent = mode === "dark" ? "Sunlit" : "Night";
       try { localStorage.setItem(THEME_KEY, mode); } catch (e) {}
       if (typeof drawMap === "function") drawMap();
     }
     try {
       const savedTheme = localStorage.getItem(THEME_KEY);
-      if (savedTheme === "light") applyTheme("light");
+      if (savedTheme === "dark") applyTheme("dark");
     } catch (e) {}
     themeBtn.addEventListener("click", () => {
-      const next = document.documentElement.classList.contains("light") ? "dark" : "light";
+      const next = document.documentElement.classList.contains("dark") ? "light" : "dark";
       applyTheme(next);
     });
 
-    // Formatters
+    // Formatters & distance helper
     const fmtCLP = (n) => "$" + Math.round(n).toLocaleString("es-CL");
     const fmtShortCLP = (n) => "$" + (n / 1e6).toFixed(2).replace(/\.00$/, "") + "M";
+
+    function kmBetween(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = ((lat2 - lat1) * Math.PI) / 180;
+      const dLon = ((lon2 - lon1) * Math.PI) / 180;
+      const a = Math.sin(dLat / 2) ** 2 +
+        Math.cos((lat1 * Math.PI) / 180) * Math.cos((lat2 * Math.PI) / 180) * Math.sin(dLon / 2) ** 2;
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
 
     // Subtitle
     const dt = PAYLOAD.generated_at ? new Date(PAYLOAD.generated_at).toLocaleString() : "Today";
     document.getElementById("meta-subtitle").textContent =
       `Updated ${dt} · UF = ${fmtCLP(PAYLOAD.uf_clp || 41364)} · Sources: TOCTOC & PortalInmobiliario`;
 
-    // Landmarks & Corridors in NE Santiago
+    // Key References (Colegio Newland & Alto Las Condes) + Secondary Landmarks
+    const NEWLAND = { name: "Colegio Newland", lat: -33.3638, lon: -70.5258, featured: true };
+    const ALTO_LC = { name: "Alto Las Condes", lat: -33.3905, lon: -70.5465, featured: true };
+
     const LANDMARKS = [
-      { name: "Alto Las Condes", lat: -33.3905, lon: -70.5465 },
-      { name: "Portal La Dehesa", lat: -33.3575, lon: -70.5145 },
-      { name: "Mall Sport", lat: -33.3805, lon: -70.5335 },
-      { name: "Los Dominicos", lat: -33.4070, lon: -70.5410 },
-      { name: "Golf Lomas La Dehesa", lat: -33.3340, lon: -70.5115 },
-      { name: "San Carlos Apoquindo", lat: -33.4040, lon: -70.5060 },
-      { name: "Los Trapenses", lat: -33.3325, lon: -70.5430 }
+      NEWLAND,
+      ALTO_LC,
+      { name: "Portal La Dehesa", lat: -33.3575, lon: -70.5145, featured: false },
+      { name: "Mall Sport", lat: -33.3805, lon: -70.5335, featured: false },
+      { name: "Los Dominicos", lat: -33.4070, lon: -70.5410, featured: false },
+      { name: "Golf Lomas La Dehesa", lat: -33.3340, lon: -70.5115, featured: false },
+      { name: "San Carlos Apoquindo", lat: -33.4040, lon: -70.5060, featured: false },
+      { name: "Los Trapenses", lat: -33.3325, lon: -70.5430, featured: false }
     ];
 
     const ROADS = [
@@ -1261,11 +1289,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       centerLat: -33.372,
       centerLon: -70.525,
       zoom: 1.0,
-      dragging: false,
       moved: false,
-      pointerId: null,
-      lastX: 0,
-      lastY: 0,
+      isPinching: false,
       selectedId: null,
       hoveredId: null
     };
@@ -1348,20 +1373,36 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       return out;
     }
 
+    function drawStar(cx, cy, spikes, outerR, innerR) {
+      let rot = (Math.PI / 2) * 3;
+      const step = Math.PI / spikes;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy - outerR);
+      for (let i = 0; i < spikes; i++) {
+        ctx.lineTo(cx + Math.cos(rot) * outerR, cy + Math.sin(rot) * outerR);
+        rot += step;
+        ctx.lineTo(cx + Math.cos(rot) * innerR, cy + Math.sin(rot) * innerR);
+        rot += step;
+      }
+      ctx.closePath();
+    }
+
     function drawMap() {
       const w = canvas.clientWidth;
       const h = canvas.clientHeight;
       if (!w || !h) return;
 
-      const isLight = document.documentElement.classList.contains("light");
-      const bg = isLight ? "#eef2f6" : "#0b111a";
-      const gridColor = isLight ? "rgba(15,23,42,0.06)" : "rgba(148,163,184,0.07)";
-      const roadColor = isLight ? "rgba(71,85,105,0.34)" : "rgba(148,163,184,0.22)";
-      const textMuted = isLight ? "#475569" : "#9aa8bc";
+      const isDark = document.documentElement.classList.contains("dark");
+      const bg = isDark ? "#151d1b" : "#e7f0ee";
+      const gridColor = isDark ? "rgba(236,245,243,0.06)" : "rgba(18,38,36,0.06)";
+      const roadColor = isDark ? "rgba(196,214,211,0.22)" : "rgba(75,99,96,0.28)";
+      const textMuted = isDark ? "#98b0ac" : "#4b6360";
+      const refColor = isDark ? "#ff7a59" : "#c84422";
 
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, w, h);
 
+      // Subtle map grid
       ctx.strokeStyle = gridColor;
       ctx.lineWidth = 1;
       for (let lat = -33.44; lat <= -33.30; lat += 0.02) {
@@ -1375,6 +1416,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         ctx.beginPath(); ctx.moveTo(p1.x, p1.y); ctx.lineTo(p2.x, p2.y); ctx.stroke();
       }
 
+      // Friendly zone bubbles
       const drawZoneHalo = (lat, lon, label, color) => {
         const p = project(lat, lon);
         const r = 68 * mapState.zoom;
@@ -1383,13 +1425,14 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         ctx.fillStyle = color;
         ctx.fill();
         ctx.fillStyle = textMuted;
-        ctx.font = "600 11px IBM Plex Sans, ui-sans-serif, system-ui, sans-serif";
+        ctx.font = "700 11px Nunito, ui-rounded, ui-sans-serif, system-ui, sans-serif";
         ctx.textAlign = "center";
         ctx.fillText(label, p.x, p.y - r + 16);
       };
-      drawZoneHalo(-33.346, -70.514, "LA DEHESA / LO BARNECHEA", "rgba(56, 189, 248, 0.06)");
-      drawZoneHalo(-33.395, -70.542, "ALTO LAS CONDES / LAS CONDES", "rgba(129, 140, 248, 0.06)");
+      drawZoneHalo(-33.346, -70.514, "LA DEHESA", isDark ? "rgba(34, 211, 238, 0.06)" : "rgba(14, 116, 144, 0.07)");
+      drawZoneHalo(-33.395, -70.542, "ALTO LAS CONDES", isDark ? "rgba(255, 140, 107, 0.06)" : "rgba(200, 68, 34, 0.06)");
 
+      // Roads
       ctx.strokeStyle = roadColor;
       ctx.lineWidth = Math.max(1.5, 2 * mapState.zoom);
       ctx.lineCap = "round";
@@ -1404,16 +1447,20 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         ctx.stroke();
       });
 
-      LANDMARKS.forEach((lm) => {
+      // Secondary Landmarks
+      LANDMARKS.filter((lm) => !lm.featured).forEach((lm) => {
         const p = project(lm.lat, lm.lon);
-        ctx.fillStyle = "#fb7185";
-        ctx.fillRect(p.x - 3.5, p.y - 3.5, 7, 7);
+        ctx.fillStyle = isDark ? "#a8988b" : "#8c7a6c";
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+        ctx.fill();
         ctx.fillStyle = textMuted;
-        ctx.font = "500 10px IBM Plex Sans, ui-sans-serif, system-ui, sans-serif";
+        ctx.font = "600 10px Nunito, ui-rounded, ui-sans-serif, system-ui, sans-serif";
         ctx.textAlign = "left";
-        ctx.fillText(lm.name, p.x + 7, p.y + 3);
+        ctx.fillText(lm.name, p.x + 6, p.y + 3);
       });
 
+      // Property Pins
       const items = getFilteredListings();
       items.forEach((item) => {
         if (!item.lat || !item.lon) return;
@@ -1423,24 +1470,24 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         const isHov = item.id === mapState.hoveredId;
         const highlightNew = isUnseen(item) || isAddedRecently(item);
 
-        let color = item.has_pool ? (isLight ? "#0891b2" : "#22d3ee") : "#818cf8";
-        if (dec === "yes") color = isLight ? "#047857" : "#34d399";
-        if (dec === "no") color = "#64748b";
+        let color = item.has_pool ? (isDark ? "#22d3ee" : "#0e7490") : "#0284c7";
+        if (dec === "yes") color = isDark ? "#34d399" : "#0f766e";
+        if (dec === "no") color = "#78716c";
 
-        const radius = isSel ? 9 : isHov ? 8 : 6;
+        const radius = isSel ? 9.5 : isHov ? 8.5 : 6.5;
 
         if (highlightNew && dec === "none") {
           ctx.beginPath();
           ctx.arc(p.x, p.y, radius + 3.5, 0, Math.PI * 2);
-          ctx.lineWidth = 1.5;
-          ctx.strokeStyle = isLight ? "#2563eb" : "#7db1ff";
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = refColor;
           ctx.stroke();
         }
 
         if (isSel || isHov) {
           ctx.beginPath();
-          ctx.arc(p.x, p.y, radius + 5, 0, Math.PI * 2);
-          ctx.fillStyle = isLight ? "rgba(37, 99, 235, 0.18)" : "rgba(79, 143, 247, 0.28)";
+          ctx.arc(p.x, p.y, radius + 6, 0, Math.PI * 2);
+          ctx.fillStyle = isDark ? "rgba(255, 140, 107, 0.25)" : "rgba(200, 68, 34, 0.20)";
           ctx.fill();
         }
 
@@ -1449,19 +1496,45 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         ctx.fillStyle = color;
         ctx.fill();
         ctx.lineWidth = isSel ? 2.5 : 1.5;
-        ctx.strokeStyle = isLight ? "#ffffff" : "#0c1118";
+        ctx.strokeStyle = isDark ? "#181411" : "#ffffff";
         ctx.stroke();
 
         if (mapState.zoom >= 1.5 || isSel) {
           const lbl = fmtShortCLP(item.price_clp);
-          ctx.font = "600 10px ui-monospace, monospace";
+          ctx.font = "700 10px ui-monospace, monospace";
           const tw = ctx.measureText(lbl).width + 10;
-          ctx.fillStyle = isLight ? "rgba(255,255,255,0.95)" : "rgba(19,26,36,0.92)";
-          ctx.fillRect(p.x - tw / 2, p.y - radius - 19, tw, 15);
-          ctx.fillStyle = isLight ? "#0f172a" : "#edf2f7";
+          ctx.fillStyle = isDark ? "rgba(34,28,24,0.92)" : "rgba(255,255,255,0.95)";
+          ctx.fillRect(p.x - tw / 2, p.y - radius - 20, tw, 15);
+          ctx.fillStyle = isDark ? "#faf5ef" : "#241a12";
           ctx.textAlign = "center";
-          ctx.fillText(lbl, p.x, p.y - radius - 8);
+          ctx.fillText(lbl, p.x, p.y - radius - 9);
         }
+      });
+
+      // Featured References on top: Colegio Newland & Alto Las Condes
+      LANDMARKS.filter((lm) => lm.featured).forEach((lm) => {
+        const p = project(lm.lat, lm.lon);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 13, 0, Math.PI * 2);
+        ctx.fillStyle = isDark ? "rgba(255, 122, 89, 0.20)" : "rgba(200, 68, 34, 0.14)";
+        ctx.fill();
+
+        drawStar(p.x, p.y, 5, 8.5, 4);
+        ctx.fillStyle = refColor;
+        ctx.fill();
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = isDark ? "#181411" : "#ffffff";
+        ctx.stroke();
+
+        ctx.font = "800 11px Nunito, ui-rounded, ui-sans-serif, system-ui, sans-serif";
+        const tw = ctx.measureText(lm.name).width + 12;
+        ctx.fillStyle = refColor;
+        ctx.beginPath();
+        ctx.roundRect(p.x + 10, p.y - 10, tw, 20, 6);
+        ctx.fill();
+        ctx.fillStyle = "#ffffff";
+        ctx.textAlign = "left";
+        ctx.fillText(lm.name, p.x + 16, p.y + 4);
       });
     }
 
@@ -1481,84 +1554,144 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       return best;
     }
 
-    // Unified Pointer Events for mouse + touch pan & tap
+    // Multi-touch Pinch-to-Zoom + Pan + Tap using Pointer Events
+    const activePointers = new Map();
+    let pinchPrev = null;
+
+    function getPinchMetrics() {
+      const pts = Array.from(activePointers.values());
+      if (pts.length < 2) return null;
+      const [a, b] = pts;
+      const dist = Math.hypot(b.clientX - a.clientX, b.clientY - a.clientY);
+      const midX = (a.clientX + b.clientX) / 2;
+      const midY = (a.clientY + b.clientY) / 2;
+      return { dist, midX, midY };
+    }
+
     canvas.addEventListener("pointerdown", (e) => {
-      mapState.dragging = true;
-      mapState.moved = false;
-      mapState.pointerId = e.pointerId;
-      mapState.lastX = e.clientX;
-      mapState.lastY = e.clientY;
+      activePointers.set(e.pointerId, { clientX: e.clientX, clientY: e.clientY });
       try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+      if (activePointers.size === 1) {
+        mapState.moved = false;
+      } else if (activePointers.size === 2) {
+        mapState.isPinching = true;
+        mapState.moved = true;
+        pinchPrev = getPinchMetrics();
+      }
     });
 
     canvas.addEventListener("pointermove", (e) => {
-      if (mapState.dragging && e.pointerId === mapState.pointerId) {
-        const dx = e.clientX - mapState.lastX;
-        const dy = e.clientY - mapState.lastY;
-        if (Math.hypot(dx, dy) > 3) mapState.moved = true;
-        mapState.lastX = e.clientX;
-        mapState.lastY = e.clientY;
-        const w = canvas.clientWidth;
-        const h = canvas.clientHeight;
-        const baseScale = Math.min(w, h) * 8.2 * mapState.zoom;
-        const cosLat = Math.cos((mapState.centerLat * Math.PI) / 180);
-        mapState.centerLon -= dx / (cosLat * baseScale);
-        mapState.centerLat += dy / baseScale;
-        drawMap();
-        return;
+      if (activePointers.has(e.pointerId)) {
+        const prev = activePointers.get(e.pointerId);
+        const dx = e.clientX - prev.clientX;
+        const dy = e.clientY - prev.clientY;
+        activePointers.set(e.pointerId, { clientX: e.clientX, clientY: e.clientY });
+
+        if (activePointers.size >= 2) {
+          const cur = getPinchMetrics();
+          if (cur && pinchPrev && pinchPrev.dist > 0) {
+            const w = canvas.clientWidth;
+            const h = canvas.clientHeight;
+            const rect = canvas.getBoundingClientRect();
+            const scaleFactor = cur.dist / pinchPrev.dist;
+            const oldZoom = mapState.zoom;
+            const newZoom = Math.max(0.6, Math.min(8.0, oldZoom * scaleFactor));
+            const cosLat = Math.cos((mapState.centerLat * Math.PI) / 180);
+
+            // Anchor zoom around pinch midpoint + pan by midpoint delta
+            const mx = cur.midX - rect.left - w / 2;
+            const my = cur.midY - rect.top - h / 2;
+            const oldScale = Math.min(w, h) * 8.2 * oldZoom;
+            const newScale = Math.min(w, h) * 8.2 * newZoom;
+            const panDx = cur.midX - pinchPrev.midX;
+            const panDy = cur.midY - pinchPrev.midY;
+
+            mapState.centerLon += mx * (1 / (cosLat * oldScale) - 1 / (cosLat * newScale)) - panDx / (cosLat * newScale);
+            mapState.centerLat -= my * (1 / oldScale - 1 / newScale) - panDy / newScale;
+            mapState.zoom = newZoom;
+            drawMap();
+          }
+          pinchPrev = cur;
+          return;
+        }
+
+        if (activePointers.size === 1 && !mapState.isPinching) {
+          if (Math.hypot(dx, dy) > 3) mapState.moved = true;
+          const w = canvas.clientWidth;
+          const h = canvas.clientHeight;
+          const baseScale = Math.min(w, h) * 8.2 * mapState.zoom;
+          const cosLat = Math.cos((mapState.centerLat * Math.PI) / 180);
+          mapState.centerLon -= dx / (cosLat * baseScale);
+          mapState.centerLat += dy / baseScale;
+          drawMap();
+          return;
+        }
       }
 
-      const rect = canvas.getBoundingClientRect();
-      const mx = e.clientX - rect.left;
-      const my = e.clientY - rect.top;
-      const hit = findPinAt(mx, my);
-      const tt = document.getElementById("map-tooltip");
-      if (hit) {
-        mapState.hoveredId = hit.id;
-        canvas.style.cursor = "pointer";
-        tt.classList.remove("hidden");
-        tt.style.left = Math.min(mx + 12, rect.width - 255) + "px";
-        tt.style.top = Math.max(8, my - 10) + "px";
-        tt.innerHTML = `
-          <div style="font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(hit.title)}</div>
-          <div style="color:var(--text-muted); margin-top:2px;">
-            ${fmtCLP(hit.price_clp)} (${esc(hit.price_uf || "-")} UF) · ${hit.bedrooms}D / ${hit.bathrooms}B
-            ${hit.has_pool ? " · <span style='color:var(--pool);'>Pool</span>" : ""}
-          </div>
-        `;
-      } else {
-        mapState.hoveredId = null;
-        canvas.style.cursor = "grab";
-        tt.classList.add("hidden");
+      // Hover tooltip when no pointer is pressed
+      if (activePointers.size === 0) {
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+        const hit = findPinAt(mx, my);
+        const tt = document.getElementById("map-tooltip");
+        if (hit) {
+          mapState.hoveredId = hit.id;
+          canvas.style.cursor = "pointer";
+          tt.classList.remove("hidden");
+          tt.style.left = Math.min(mx + 12, rect.width - 265) + "px";
+          tt.style.top = Math.max(8, my - 10) + "px";
+          tt.innerHTML = `
+            <div style="font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(hit.title)}</div>
+            <div style="color:var(--text-muted); margin-top:2px;">
+              ${fmtCLP(hit.price_clp)} (${esc(hit.price_uf || "-")} UF) · ${hit.bedrooms}D / ${hit.bathrooms}B
+              ${hit.has_pool ? " · <span style='color:var(--pool); font-weight:700;'>Pool</span>" : ""}
+            </div>
+          `;
+        } else {
+          mapState.hoveredId = null;
+          canvas.style.cursor = "grab";
+          tt.classList.add("hidden");
+        }
+        drawMap();
       }
-      drawMap();
     });
 
-    function endDrag(e) {
-      if (!mapState.dragging) return;
-      const wasMoved = mapState.moved;
-      mapState.dragging = false;
-      mapState.pointerId = null;
+    function endPointer(e) {
+      const wasSingleTap = activePointers.size === 1 && !mapState.isPinching && !mapState.moved && e.type === "pointerup";
+      activePointers.delete(e.pointerId);
       try { canvas.releasePointerCapture(e.pointerId); } catch (err) {}
-      if (!wasMoved && e.type === "pointerup") {
-        const rect = canvas.getBoundingClientRect();
-        const hit = findPinAt(e.clientX - rect.left, e.clientY - rect.top);
-        if (hit) selectProperty(hit.id);
+      if (activePointers.size < 2) {
+        pinchPrev = null;
+      }
+      if (activePointers.size === 0) {
+        if (wasSingleTap) {
+          const rect = canvas.getBoundingClientRect();
+          const hit = findPinAt(e.clientX - rect.left, e.clientY - rect.top);
+          if (hit) selectProperty(hit.id);
+        }
+        mapState.isPinching = false;
       }
     }
-    canvas.addEventListener("pointerup", endDrag);
-    canvas.addEventListener("pointercancel", endDrag);
-    canvas.addEventListener("lostpointercapture", () => { mapState.dragging = false; });
+    canvas.addEventListener("pointerup", endPointer);
+    canvas.addEventListener("pointercancel", endPointer);
+    canvas.addEventListener("lostpointercapture", (e) => {
+      activePointers.delete(e.pointerId);
+      if (activePointers.size === 0) {
+        pinchPrev = null;
+        mapState.isPinching = false;
+      }
+    });
 
     canvas.addEventListener("wheel", (e) => {
       e.preventDefault();
       const factor = e.deltaY < 0 ? 1.18 : 0.85;
-      mapState.zoom = Math.max(0.6, Math.min(6.0, mapState.zoom * factor));
+      mapState.zoom = Math.max(0.6, Math.min(8.0, mapState.zoom * factor));
       drawMap();
     }, { passive: false });
 
     document.getElementById("zoom-in").addEventListener("click", () => {
-      mapState.zoom = Math.min(6.0, mapState.zoom * 1.3);
+      mapState.zoom = Math.min(8.0, mapState.zoom * 1.3);
       drawMap();
     });
     document.getElementById("zoom-out").addEventListener("click", () => {
@@ -1571,10 +1704,10 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       btn.addEventListener("click", () => {
         const z = btn.dataset.jump;
         jumpBtns.forEach((b) => b.setAttribute("aria-pressed", String(b === btn)));
-        if (z === "la_dehesa") {
-          mapState.centerLat = -33.348; mapState.centerLon = -70.514; mapState.zoom = 1.65;
+        if (z === "newland") {
+          mapState.centerLat = NEWLAND.lat; mapState.centerLon = NEWLAND.lon; mapState.zoom = 1.85;
         } else if (z === "alto_las_condes") {
-          mapState.centerLat = -33.395; mapState.centerLon = -70.538; mapState.zoom = 1.65;
+          mapState.centerLat = ALTO_LC.lat; mapState.centerLon = ALTO_LC.lon; mapState.zoom = 1.85;
         } else {
           mapState.centerLat = -33.372; mapState.centerLon = -70.525; mapState.zoom = 1.0;
         }
@@ -1602,25 +1735,28 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       drawMap();
     }
 
-    const SVG_CHECK = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>`;
-    const SVG_NO = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
-    const SVG_EXT = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
+    const SVG_CHECK = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>`;
+    const SVG_NO = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+    const SVG_EXT = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
 
     function renderInspector(item) {
       const box = document.getElementById("inspector");
       if (!item) {
-        box.innerHTML = `<div class="inspector-empty">Select a house on the map or list to inspect details.</div>`;
+        box.innerHTML = `<div class="inspector-empty">Click any house pin on the map or any card on the right to peek inside!</div>`;
         return;
       }
       const tr = getTrack(item.id);
       const dec = getDecision(item.id);
       const tags = [];
-      if (isAddedRecently(item)) tags.push(`<span class="tag tag-new">New (24h)</span>`);
+      if (isAddedRecently(item)) tags.push(`<span class="tag tag-new">Fresh (24h)</span>`);
       if (item.has_pool) tags.push(`<span class="tag tag-pool">Pool</span>`);
       if (item.has_quincho) tags.push(`<span class="tag tag-quincho">Quincho</span>`);
       if (item.is_condominio) tags.push(`<span class="tag tag-condo">Condominio</span>`);
       if (item.has_service_room) tags.push(`<span class="tag tag-service">Service Room</span>`);
       if (item.is_furnished) tags.push(`<span class="tag tag-furnished">Furnished</span>`);
+
+      const distNewland = (item.lat && item.lon) ? kmBetween(item.lat, item.lon, NEWLAND.lat, NEWLAND.lon).toFixed(1) : null;
+      const distAlto = (item.lat && item.lon) ? kmBetween(item.lat, item.lon, ALTO_LC.lat, ALTO_LC.lon).toFixed(1) : null;
 
       box.innerHTML = `
         <div class="inspector-layout">
@@ -1637,6 +1773,14 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
               </div>
             </div>
 
+            ${(distNewland && distAlto) ? `
+              <div class="inspector-distances tabular-nums">
+                <span>${distNewland} km to Colegio Newland</span>
+                <span>·</span>
+                <span>${distAlto} km to Alto Las Condes</span>
+              </div>
+            ` : ""}
+
             <div class="inspector-specs tabular-nums">
               <span><strong>${item.bedrooms}</strong> Bedrooms</span>
               <span><strong>${item.bathrooms || "-"}</strong> Baths</span>
@@ -1651,18 +1795,18 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
             <div class="inspector-actions">
               <button type="button" onclick="setDecision('${esc(item.id)}', 'yes')"
-                class="action-btn ${dec === "yes" ? "is-visited" : ""}">
+                class="action-btn ${dec === "yes" ? "is-yes" : ""}">
                 ${SVG_CHECK}
-                ${dec === "yes" ? "Yes (Saved)" : "Yes"}
+                ${dec === "yes" ? "Love It! (Yes)" : "Love It (Yes)"}
               </button>
               <button type="button" onclick="setDecision('${esc(item.id)}', 'no')"
-                class="action-btn ${dec === "no" ? "is-dismissed" : ""}">
+                class="action-btn ${dec === "no" ? "is-no" : ""}">
                 ${SVG_NO}
-                ${dec === "no" ? "No (Moved)" : "No"}
+                ${dec === "no" ? "Noped (No)" : "Nope (No)"}
               </button>
               <button type="button" onclick="setTrack('${esc(item.id)}', {status: '${tr.status === "visited" ? "yes" : "visited"}', seen: true})"
-                class="action-btn ${tr.status === "visited" ? "is-shortlist" : ""}">
-                ${tr.status === "visited" ? "Visited" : "Mark Visited"}
+                class="action-btn ${tr.status === "visited" ? "is-visited" : ""}">
+                ${tr.status === "visited" ? "Visited!" : "Mark Visited"}
               </button>
               <a href="${esc(item.url)}" target="_blank" rel="noopener" class="btn-primary">
                 Open Listing ${SVG_EXT}
@@ -1672,7 +1816,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
             <div>
               <input type="text" aria-label="Personal note for ${esc(item.title)}"
                 value="${esc(tr.note || "")}"
-                placeholder="Add personal note (e.g., 'Contacted broker, visit Tuesday 10am')..."
+                placeholder="Jot down a note (e.g., 'Great yard! Visit Tuesday 10am')..."
                 onchange="setTrack('${esc(item.id)}', {note: this.value})"
                 class="note-input" />
             </div>
@@ -1717,16 +1861,16 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
       if (!items.length) {
         const emptyMsg = activeTab === "review"
-          ? "No undecided houses match your current filters."
+          ? "All caught up! No undecided houses match these filters."
           : activeTab === "yes"
-          ? "No houses marked Yes yet. Click the check button on any listing to save it here."
+          ? "No houses in Love It! yet. Tap the check button on any house to save it here."
           : activeTab === "no"
-          ? "No houses marked No yet."
-          : "No houses match your current filters.";
+          ? "No houses in Nope yet."
+          : "No houses match these filters.";
         container.innerHTML = `
           <div class="empty-state">
             <div>${emptyMsg}</div>
-            <button type="button" class="btn-ghost" onclick="resetFilters()">Reset Filters</button>
+            <button type="button" class="btn-pill" onclick="resetFilters()">Reset Filters</button>
           </div>
         `;
         return;
@@ -1753,7 +1897,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
               <div class="listing-info">
                 <div class="listing-top">
                   <div style="display:flex; align-items:center; gap:6px; min-width:0; flex:1;">
-                    ${unseen ? `<span class="unseen-dot" title="Not yet seen"></span>` : ""}
+                    ${unseen ? `<span class="unseen-dot" title="Not peeked yet"></span>` : ""}
                     <div class="listing-title">${esc(item.title)}</div>
                   </div>
                   <span class="listing-price tabular-nums">${fmtShortCLP(item.price_clp)}</span>
@@ -1764,17 +1908,17 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
                   <span>${item.bathrooms || "-"}B</span>
                   <span>~${item.estimated_rooms} rooms</span>
                   ${item.built_m2 ? `<span>${item.built_m2} m²</span>` : ""}
-                  ${isNew ? `<span class="tag tag-new">New</span>` : ""}
+                  ${isNew ? `<span class="tag tag-new">Fresh</span>` : ""}
                   ${item.has_pool ? `<span class="tag tag-pool">Pool</span>` : ""}
                 </div>
                 ${tr.note ? `<div class="listing-note">Note: ${esc(tr.note)}</div>` : ""}
               </div>
             </button>
             <div class="listing-quick-actions" aria-label="Quick decision">
-              <button type="button" class="quick-btn yes" aria-pressed="${dec === "yes"}" aria-label="Say Yes to ${esc(item.title)}" title="Yes — move to Yes list" onclick="setDecision('${esc(item.id)}', 'yes')">
+              <button type="button" class="quick-btn yes" aria-pressed="${dec === "yes"}" aria-label="Love It (Yes) for ${esc(item.title)}" title="Love It! — move to Yes list" onclick="setDecision('${esc(item.id)}', 'yes')">
                 ${SVG_CHECK}
               </button>
-              <button type="button" class="quick-btn no" aria-pressed="${dec === "no"}" aria-label="Say No to ${esc(item.title)}" title="No — move to No list" onclick="setDecision('${esc(item.id)}', 'no')">
+              <button type="button" class="quick-btn no" aria-pressed="${dec === "no"}" aria-label="Nope (No) for ${esc(item.title)}" title="Nope — move to No list" onclick="setDecision('${esc(item.id)}', 'no')">
                 ${SVG_NO}
               </button>
             </div>
