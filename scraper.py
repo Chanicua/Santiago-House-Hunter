@@ -428,7 +428,9 @@ def scrape_portalinmobiliario(
 
         polycards = _extract_polycards(html)
         if not polycards:
-            print(f"[WARN] {source_name} no polycards found ({url})")
+            t_m = re.search(r"<title[^>]*>(.*?)</title>", html, re.I | re.S)
+            page_title = clean_text(t_m.group(1)) if t_m else "unknown"
+            print(f"[WARN] {source_name} no polycards found ({url}) [len={len(html)}, title={page_title!r}]")
             break
 
         print(f"[INFO] {source_name} {url} -> {len(polycards)} raw items")
