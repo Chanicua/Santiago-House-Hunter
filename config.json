@@ -1,0 +1,72 @@
+{
+  "search": {
+    "min_bedrooms": 4,
+    "max_bedrooms": 6,
+    "min_price_clp": 3000000,
+    "max_price_clp": 5000000,
+    "fallback_uf_clp": 41364.17
+  },
+  "zones": {
+    "la_dehesa": {
+      "label": "La Dehesa / Lo Barnechea",
+      "center": [-33.348, -70.514],
+      "bbox": {
+        "lat_min": -33.380,
+        "lat_max": -33.305,
+        "lon_min": -70.555,
+        "lon_max": -70.440
+      },
+      "keywords": [
+        "la dehesa", "lo barnechea", "los trapenses", "huinganal",
+        "lomas de la dehesa", "golf lomas", "valle la dehesa",
+        "los nogales", "parque del sol", "la ciénaga", "la cienaga",
+        "el arrayán", "el arrayan", "valle escondido", "camino turistico",
+        "camino turístico", "pie andino", "raul labbe", "raúl labbé"
+      ]
+    },
+    "alto_las_condes": {
+      "label": "Alto Las Condes / Las Condes",
+      "center": [-33.390, -70.546],
+      "bbox": {
+        "lat_min": -33.425,
+        "lat_max": -33.370,
+        "lon_min": -70.585,
+        "lon_max": -70.490
+      },
+      "keywords": [
+        "alto las condes", "las tranqueras", "estoril", "san damián",
+        "san damian", "mall sport", "los dominicos", "dominicos",
+        "camino el alba", "camino las flores", "san carlos de apoquindo",
+        "quinchamalí", "quinchamali", "el remanso", "cerro apoquindo",
+        "kennedy", "vital apoquindo", "vaticano", "tomas moro",
+        "tomás moro", "hernando de magallanes", "manquehue"
+      ]
+    }
+  },
+  "sources": {
+    "toctoc": [
+      {
+        "url": "https://www.toctoc.com/arriendo/casa/metropolitana/lo-barnechea/4-dormitorios",
+        "default_zone": "la_dehesa",
+        "max_pages": 3
+      },
+      {
+        "url": "https://www.toctoc.com/arriendo/casa/metropolitana/las-condes/4-dormitorios",
+        "default_zone": "alto_las_condes",
+        "max_pages": 3
+      }
+    ],
+    "portalinmobiliario": [
+      {
+        "url": "https://www.portalinmobiliario.com/arriendo/casa/la-dehesa-lo-barnechea-santiago-metropolitana",
+        "default_zone": "la_dehesa",
+        "max_pages": 2
+      },
+      {
+        "url": "https://www.portalinmobiliario.com/arriendo/casa/mas-de-4-dormitorios/las-condes-metropolitana",
+        "default_zone": "alto_las_condes",
+        "max_pages": 2
+      }
+    ]
+  }
+}
