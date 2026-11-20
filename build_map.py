@@ -777,7 +777,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
     .listing-row {
       display: flex;
-      align-items: stretch;
+      flex-direction: column;
       max-width: 100%;
       min-width: 0;
       border-bottom: 1px solid var(--border);
@@ -794,42 +794,45 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     }
 
     .listing-main {
-      flex: 1;
+      width: 100%;
       min-width: 0;
       max-width: 100%;
       overflow: hidden;
       text-align: left;
       background: transparent;
       border: none;
-      padding: 12px 10px 12px 14px;
+      padding: 14px 14px 10px;
       display: flex;
-      gap: 12px;
+      gap: 14px;
       align-items: flex-start;
       cursor: pointer;
     }
 
     .listing-quick-actions {
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 6px;
-      padding: 10px 12px 10px 4px;
-      flex-shrink: 0;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+      padding: 0 14px 12px;
     }
 
     .quick-btn {
-      width: 34px;
-      height: 34px;
-      display: grid;
-      place-items: center;
+      flex: 1;
+      min-height: 38px;
+      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
       border-radius: 999px;
       border: 1px solid var(--border-strong);
       background: transparent;
-      color: var(--text-muted);
+      color: var(--text-secondary);
+      font-size: 0.8125rem;
+      font-weight: 700;
       cursor: pointer;
-      transition: transform 120ms var(--ease-out), background-color 140ms var(--ease-out), border-color 140ms var(--ease-out), color 140ms var(--ease-out);
+      transition: background-color 140ms var(--ease-out), border-color 140ms var(--ease-out), color 140ms var(--ease-out);
     }
-    .quick-btn:hover { transform: scale(1.06); }
     .quick-btn.yes:hover,
     .quick-btn.yes[aria-pressed="true"] {
       background: var(--yes-soft);
@@ -843,6 +846,28 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       color: var(--no);
     }
 
+    .quick-link {
+      min-height: 38px;
+      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+      background: transparent;
+      color: var(--accent-text);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background-color 140ms var(--ease-out), border-color 140ms var(--ease-out);
+    }
+    .quick-link:hover {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+    }
+
     .unseen-dot {
       width: 8px;
       height: 8px;
@@ -853,18 +878,18 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     }
 
     .listing-thumb {
-      width: 84px;
-      height: 84px;
+      width: 108px;
+      height: 108px;
       object-fit: cover;
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius-md);
       background: var(--surface-hover);
       flex-shrink: 0;
     }
 
     .listing-thumb-empty {
-      width: 84px;
-      height: 84px;
-      border-radius: var(--radius-sm);
+      width: 108px;
+      height: 108px;
+      border-radius: var(--radius-md);
       background: var(--surface-hover);
       color: var(--text-muted);
       font-size: 0.75rem;
@@ -878,20 +903,31 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       min-width: 0;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 5px;
     }
 
     .listing-top {
       display: flex;
       justify-content: space-between;
-      align-items: baseline;
+      align-items: flex-start;
       gap: 10px;
     }
 
     .listing-title {
-      font-size: 0.875rem;
+      font-size: 0.9375rem;
       font-weight: 700;
       color: var(--text);
+      line-height: 1.28;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .listing-distances {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent-text);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -981,11 +1017,12 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       .btn-primary,
       .map-chip,
       .triage-tab,
-      .mark-seen-btn {
+      .mark-seen-btn,
+      .quick-btn,
+      .quick-link {
         min-height: 44px;
       }
-      .zoom-btn,
-      .quick-btn {
+      .zoom-btn {
         width: 44px;
         height: 44px;
       }
@@ -997,16 +1034,9 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         gap: 10px;
       }
 
-      /* Switch between List and Map cleanly on mobile/tablet */
-      body.mobile-view-list .left-col .map-frame,
-      body.mobile-view-list .left-col .map-legend {
-        display: none;
-      }
-      body.mobile-view-map .listings-panel {
-        display: none;
-      }
-      body.mobile-view-map .map-frame {
-        height: max(360px, calc(100dvh - 255px));
+      /* Keep the interactive map always visible above the houses list */
+      .map-frame {
+        height: 340px;
       }
 
       /* Let list scroll natively with page on mobile */
@@ -1214,33 +1244,19 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         min-height: 36px;
       }
 
-      /* Bigger tap area & compact fit on narrow phone screens */
+      /* Larger image + spacious row on phones */
       .listing-main {
-        padding: 10px 8px 10px 10px;
-        gap: 10px;
+        padding: 12px 12px 10px;
+        gap: 12px;
       }
       .listing-thumb,
       .listing-thumb-empty {
-        width: 68px;
-        height: 68px;
-      }
-      .listing-top {
-        gap: 6px;
-      }
-      .listing-title {
-        white-space: normal;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        line-height: 1.25;
+        width: 96px;
+        height: 96px;
       }
       .listing-quick-actions {
-        padding: 8px 8px 8px 2px;
-        gap: 6px;
-      }
-      .quick-btn {
-        width: 40px;
-        height: 40px;
+        padding: 0 12px 12px;
+        gap: 8px;
       }
 
       /* Full-width primary action on mobile sheet */
@@ -2122,7 +2138,9 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
     function showSelectedOnMap() {
       closeMobileSheet();
-      setMobileView("map");
+      const mf = document.querySelector(".map-frame");
+      if (mf) mf.scrollIntoView({ behavior: "smooth", block: "start" });
+      drawMap();
     }
 
     function selectProperty(id, markSeen = true, shouldOpenSheet = true) {
@@ -2316,6 +2334,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         const isSel = item.id === mapState.selectedId;
         const unseen = isUnseen(item);
         const isNew = isAddedRecently(item);
+        const distNewland = (item.lat && item.lon) ? kmBetween(item.lat, item.lon, NEWLAND.lat, NEWLAND.lon).toFixed(1) : null;
+        const distAlto = (item.lat && item.lon) ? kmBetween(item.lat, item.lon, ALTO_LC.lat, ALTO_LC.lon).toFixed(1) : null;
         const rowCls = [
           "listing-row",
           unseen ? "is-unseen" : "",
@@ -2330,31 +2350,43 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
                 : `<div class="listing-thumb-empty">No img</div>`}
               <div class="listing-info">
                 <div class="listing-top">
-                  <div style="display:flex; align-items:center; gap:6px; min-width:0; flex:1;">
-                    ${unseen ? `<span class="unseen-dot" title="Not peeked yet"></span>` : ""}
+                  <div style="display:flex; align-items:flex-start; gap:6px; min-width:0; flex:1;">
+                    ${unseen ? `<span class="unseen-dot" style="margin-top:5px;" title="Not peeked yet"></span>` : ""}
                     <div class="listing-title">${esc(item.title)}</div>
                   </div>
-                  <span class="listing-price tabular-nums">${fmtShortCLP(item.price_clp)}</span>
+                  <div style="text-align:right; flex-shrink:0;">
+                    <div class="listing-price tabular-nums">${fmtShortCLP(item.price_clp)}</div>
+                    ${item.price_uf ? `<div style="font-size:0.7rem; color:var(--text-muted); font-weight:600;" class="tabular-nums">${esc(item.price_uf)} UF</div>` : ""}
+                  </div>
                 </div>
-                <div class="listing-zone">${esc(item.zone_label)} · ${esc(item.source)}${item.published_ago ? ` · ${esc(item.published_ago)}` : ""}</div>
+                <div class="listing-zone">${esc(item.address || item.zone_label)} · ${esc(item.source)}${item.published_ago ? ` · ${esc(item.published_ago)}` : ""}</div>
+                ${(distNewland && distAlto) ? `<div class="listing-distances tabular-nums">${distNewland} km Newland · ${distAlto} km Alto LC</div>` : ""}
                 <div class="listing-specs tabular-nums">
                   <span>${item.bedrooms}D</span>
                   <span>${item.bathrooms || "-"}B</span>
                   <span>~${item.estimated_rooms} rooms</span>
                   ${item.built_m2 ? `<span>${item.built_m2} m²</span>` : ""}
+                  ${item.lot_m2 ? `<span>${item.lot_m2} m² lot</span>` : ""}
                   ${isNew ? `<span class="tag tag-new">Fresh</span>` : ""}
                   ${item.has_pool ? `<span class="tag tag-pool">Pool</span>` : ""}
+                  ${item.has_quincho ? `<span class="tag tag-quincho">Quincho</span>` : ""}
+                  ${item.is_condominio ? `<span class="tag tag-condo">Condo</span>` : ""}
                 </div>
                 ${tr.note ? `<div class="listing-note">Note: ${esc(tr.note)}</div>` : ""}
               </div>
             </button>
-            <div class="listing-quick-actions" aria-label="Quick decision">
-              <button type="button" class="quick-btn yes" aria-pressed="${dec === "yes"}" aria-label="Love It (Yes) for ${esc(item.title)}" title="Love It! — move to Yes list" onclick="setDecision('${esc(item.id)}', 'yes')">
+            <div class="listing-quick-actions" aria-label="Quick actions">
+              <button type="button" class="quick-btn yes" aria-pressed="${dec === "yes"}" aria-label="Love It (Yes) for ${esc(item.title)}" onclick="setDecision('${esc(item.id)}', 'yes')">
                 ${SVG_CHECK}
+                <span>${dec === "yes" ? "Loved!" : "Love It"}</span>
               </button>
-              <button type="button" class="quick-btn no" aria-pressed="${dec === "no"}" aria-label="Nope (No) for ${esc(item.title)}" title="Nope — move to No list" onclick="setDecision('${esc(item.id)}', 'no')">
+              <button type="button" class="quick-btn no" aria-pressed="${dec === "no"}" aria-label="Nope (No) for ${esc(item.title)}" onclick="setDecision('${esc(item.id)}', 'no')">
                 ${SVG_NO}
+                <span>${dec === "no" ? "Noped" : "Nope"}</span>
               </button>
+              <a href="${esc(item.url)}" target="_blank" rel="noopener" class="quick-link" aria-label="Open listing for ${esc(item.title)}">
+                Open ${SVG_EXT}
+              </a>
             </div>
           </div>
         `;
@@ -2395,22 +2427,26 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     }
     mobileFilterBtn.addEventListener("click", () => toggleMobileFilters());
 
-    // Mobile bottom navigation bar
+    // Mobile bottom navigation bar (quick scroll/jump without hiding the map)
     document.querySelectorAll(".mobile-nav-btn[data-mobile-nav]").forEach((btn) => {
       btn.addEventListener("click", () => {
         const nav = btn.dataset.mobileNav;
-        if (nav === "list") {
+        document.querySelectorAll(".mobile-nav-btn[data-mobile-nav]").forEach((b) => {
+          if (b.dataset.mobileNav !== "filters") {
+            b.setAttribute("aria-current", b === btn ? "page" : "false");
+          }
+        });
+        if (nav === "map") {
           closeMobileSheet();
-          setMobileView("list");
+          document.querySelector(".map-frame").scrollIntoView({ behavior: "smooth", block: "start" });
+        } else if (nav === "list") {
+          closeMobileSheet();
           if (activeTab === "yes") setActiveTab("review");
-        } else if (nav === "map") {
-          closeMobileSheet();
-          setMobileView("map");
+          document.querySelector(".listings-panel").scrollIntoView({ behavior: "smooth", block: "start" });
         } else if (nav === "yes") {
           closeMobileSheet();
-          setMobileView("list");
           setActiveTab("yes");
-          window.scrollTo({ top: 0, behavior: "smooth" });
+          document.querySelector(".listings-panel").scrollIntoView({ behavior: "smooth", block: "start" });
         } else if (nav === "filters") {
           closeMobileSheet();
           toggleMobileFilters();
