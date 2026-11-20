@@ -1386,6 +1386,12 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
           <span id="f-max-price-lbl" class="tabular-nums">$5.0M</span>
         </label>
 
+        <label class="range-group" for="f-max-newland">
+          <span>Newland 7:30am:</span>
+          <input id="f-max-newland" type="range" min="10" max="35" step="5" value="35" />
+          <span id="f-max-newland-lbl" class="tabular-nums">≤35m</span>
+        </label>
+
         <label class="check-pill">
           <input id="f-new-only" type="checkbox" />
           <span>Fresh (24h)</span>
@@ -1718,11 +1724,21 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       return { x, y };
     }
 
+    // Hard cap: remove any listing taking >35 min worst-case to Colegio Newland at 7:30 AM
+    const MAX_MORNING_NEWLAND_MIN = 35;
+    const LISTINGS_UNDER_35 = LISTINGS.filter((item) => {
+      const drv = estNewlandDrive730(item);
+      return !drv || drv.high <= MAX_MORNING_NEWLAND_MIN;
+    });
+    LISTINGS.length = 0;
+    LISTINGS.push(...LISTINGS_UNDER_35);
+
     function getFilteredListings(tabOverride) {
       const q = document.getElementById("f-search").value.trim().toLowerCase();
       const zone = document.getElementById("f-zone").value;
       const beds = document.getElementById("f-beds").value;
       const maxPrice = parseInt(document.getElementById("f-max-price").value, 10);
+      const maxNewland = parseInt(document.getElementById("f-max-newland").value, 10) || MAX_MORNING_NEWLAND_MIN;
       const newOnly = document.getElementById("f-new-only").checked;
       const unseenOnly = document.getElementById("f-unseen-only").checked;
       const poolOnly = document.getElementById("f-pool").checked;
@@ -1741,6 +1757,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
         if (zone !== "all" && item.zone !== zone) return false;
         if (beds !== "all" && item.bedrooms !== parseInt(beds, 10)) return false;
         if (item.price_clp > maxPrice) return false;
+        const drv = estNewlandDrive730(item);
+        if (drv && drv.high > maxNewland) return false;
         if (poolOnly && !item.has_pool) return false;
         if (condoOnly && !item.is_condominio) return false;
 
@@ -2287,6 +2305,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       if (document.getElementById("f-zone").value !== "all") count++;
       if (document.getElementById("f-beds").value !== "all") count++;
       if (parseInt(document.getElementById("f-max-price").value, 10) < 5000000) count++;
+      if (parseInt(document.getElementById("f-max-newland").value, 10) < MAX_MORNING_NEWLAND_MIN) count++;
       if (document.getElementById("f-new-only").checked) count++;
       if (document.getElementById("f-unseen-only").checked) count++;
       if (document.getElementById("f-pool").checked) count++;
@@ -2301,6 +2320,8 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       document.getElementById("f-beds").value = "all";
       document.getElementById("f-max-price").value = "5000000";
       document.getElementById("f-max-price-lbl").textContent = "$5.0M";
+      document.getElementById("f-max-newland").value = String(MAX_MORNING_NEWLAND_MIN);
+      document.getElementById("f-max-newland-lbl").textContent = `≤${MAX_MORNING_NEWLAND_MIN}m`;
       document.getElementById("f-new-only").checked = false;
       document.getElementById("f-unseen-only").checked = false;
       document.getElementById("f-pool").checked = false;
@@ -2484,6 +2505,10 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     });
     document.getElementById("f-max-price").addEventListener("input", (e) => {
       document.getElementById("f-max-price-lbl").textContent = fmtShortCLP(parseInt(e.target.value, 10));
+      renderAll();
+    });
+    document.getElementById("f-max-newland").addEventListener("input", (e) => {
+      document.getElementById("f-max-newland-lbl").textContent = `≤${parseInt(e.target.value, 10)}m`;
       renderAll();
     });
 
