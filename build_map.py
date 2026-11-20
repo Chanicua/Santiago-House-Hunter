@@ -16,7 +16,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Casa Quest · Santiago — La Dehesa &amp; Alto Las Condes</title>
   <style>
     :root {
@@ -939,6 +939,312 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       font-weight: 600;
     }
 
+    /* Mobile-only helper elements (hidden on desktop) */
+    .mobile-filter-toggle {
+      display: none;
+    }
+    .mobile-sheet-header {
+      display: none;
+    }
+    .mobile-sheet-backdrop {
+      display: none;
+    }
+    .mobile-bottom-nav {
+      display: none;
+    }
+
+    @media (hover: none) {
+      .btn-pill:hover,
+      .quick-btn:hover {
+        transform: none;
+      }
+      .btn-pill:active,
+      .quick-btn:active,
+      .action-btn:active,
+      .map-chip:active,
+      .zoom-btn:active {
+        transform: scale(0.96);
+      }
+    }
+
+    @media (pointer: coarse) {
+      .btn-pill,
+      .control-input,
+      .control-select,
+      .check-pill,
+      .action-btn,
+      .btn-primary,
+      .map-chip,
+      .triage-tab,
+      .mark-seen-btn {
+        min-height: 44px;
+      }
+      .zoom-btn,
+      .quick-btn {
+        width: 44px;
+        height: 44px;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .app-shell {
+        padding: max(12px, env(safe-area-inset-top)) max(14px, env(safe-area-inset-right)) calc(86px + env(safe-area-inset-bottom)) max(14px, env(safe-area-inset-left));
+        gap: 10px;
+      }
+
+      /* Switch between List and Map cleanly on mobile/tablet */
+      body.mobile-view-list .left-col .map-frame,
+      body.mobile-view-list .left-col .map-legend {
+        display: none;
+      }
+      body.mobile-view-map .listings-panel {
+        display: none;
+      }
+      body.mobile-view-map .map-frame {
+        height: max(360px, calc(100dvh - 255px));
+      }
+
+      /* Let list scroll natively with page on mobile */
+      .listings-panel {
+        max-height: none;
+      }
+      .listings-scroll {
+        overflow-y: visible;
+      }
+
+      /* Slide-up Inspector Bottom Sheet on mobile/tablet */
+      .mobile-sheet-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(12, 20, 19, 0.48);
+        z-index: 40;
+      }
+      body.sheet-open .mobile-sheet-backdrop {
+        display: block;
+      }
+
+      .inspector-panel {
+        display: none;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 50;
+        max-height: 84dvh;
+        overflow-y: auto;
+        border-radius: 20px 20px 0 0;
+        padding: 14px 16px calc(20px + env(safe-area-inset-bottom));
+        box-shadow: var(--shadow-md);
+      }
+      body.sheet-open .inspector-panel {
+        display: block;
+      }
+
+      .mobile-sheet-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+        border-bottom: 1px dashed var(--border);
+      }
+      .mobile-sheet-title {
+        font-size: 0.8125rem;
+        font-weight: 800;
+        color: var(--text-muted);
+      }
+      .mobile-sheet-close {
+        min-height: 36px;
+        min-width: 36px;
+        padding: 0 12px;
+        border-radius: 999px;
+        border: 1px solid var(--border-strong);
+        background: var(--surface-hover);
+        color: var(--text);
+        font-size: 0.8125rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      /* Fixed Bottom Navigation Bar (thumbs-first) */
+      .mobile-bottom-nav {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 35;
+        background: var(--surface);
+        border-top: 1px solid var(--border-strong);
+        padding: 6px max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+        box-shadow: 0 -4px 16px rgba(18, 38, 36, 0.08);
+      }
+
+      .mobile-nav-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        min-height: 48px;
+        border: none;
+        border-radius: var(--radius-sm);
+        background: transparent;
+        color: var(--text-muted);
+        font-size: 0.72rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .mobile-nav-btn[aria-current="page"],
+      .mobile-nav-btn[aria-pressed="true"] {
+        color: var(--accent-text);
+        background: var(--accent-soft);
+      }
+    }
+
+    @media (max-width: 767px) {
+      .app-header {
+        gap: 8px;
+        padding-bottom: 10px;
+      }
+      .brand-title { font-size: 1.15rem; }
+      .brand-subtitle { display: none; }
+      .header-actions {
+        width: 100%;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .kpi-strip {
+        width: 100%;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 2px;
+        gap: 10px;
+        -webkit-overflow-scrolling: touch;
+      }
+      .kpi-item { white-space: nowrap; }
+      .kpi-item + .kpi-item { padding-left: 10px; }
+
+      /* Prevent iOS Safari auto-zoom on form controls */
+      .control-input,
+      .control-select,
+      .note-input {
+        font-size: 16px;
+      }
+
+      /* Collapsible Filter Bar on Mobile */
+      .filter-bar {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+        padding: 4px 0 10px;
+      }
+      .search-input {
+        width: 100%;
+        min-height: 44px;
+      }
+      .mobile-filter-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        min-height: 44px;
+        padding: 0 14px;
+        border-radius: 999px;
+        border: 1px solid var(--border-strong);
+        background: var(--surface);
+        color: var(--text);
+        font-size: 0.875rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .mobile-filter-toggle[aria-expanded="true"] {
+        background: var(--accent-soft);
+        border-color: var(--accent);
+        color: var(--accent-text);
+      }
+      .filter-extras {
+        grid-column: 1 / -1;
+        display: none;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding-top: 4px;
+      }
+      .filter-bar.is-open .filter-extras {
+        display: flex;
+      }
+      .filter-extras .control-select,
+      .filter-extras .check-pill {
+        flex: 1 1 calc(50% - 4px);
+        min-height: 44px;
+      }
+      .filter-extras .range-group {
+        flex: 1 1 100%;
+        justify-content: space-between;
+        min-height: 44px;
+      }
+      .filter-extras .range-group input[type="range"] {
+        flex: 1;
+        width: auto;
+      }
+
+      /* Triage bar scrolls smoothly on narrow phones */
+      .triage-bar {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+      .triage-tabs {
+        width: 100%;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 2px;
+        -webkit-overflow-scrolling: touch;
+      }
+      .triage-tab {
+        white-space: nowrap;
+        min-height: 40px;
+      }
+      .mark-seen-btn {
+        min-height: 36px;
+      }
+
+      /* Bigger tap area on listing rows */
+      .listing-main {
+        padding: 12px 8px 12px 12px;
+      }
+      .listing-quick-actions {
+        padding: 10px 10px 10px 4px;
+        gap: 8px;
+      }
+      .quick-btn {
+        width: 44px;
+        height: 44px;
+      }
+
+      /* Full-width primary action on mobile sheet */
+      .inspector-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .inspector-actions .action-btn,
+      .inspector-actions .btn-primary {
+        justify-content: center;
+        min-height: 44px;
+        margin-left: 0;
+      }
+      .inspector-actions .btn-primary {
+        grid-column: 1 / -1;
+      }
+    }
+
+    @media (min-width: 768px) {
+      .filter-extras {
+        display: contents;
+      }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         transition-duration: 0.01ms !important;
@@ -946,7 +1252,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     }
   </style>
 </head>
-<body>
+<body class="mobile-view-list">
   <div class="app-shell">
 
     <!-- Header & KPIs -->
@@ -1010,64 +1316,75 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     </header>
 
     <!-- Filter Toolbar -->
-    <section class="filter-bar" aria-label="Property filters">
+    <section id="filter-bar" class="filter-bar" aria-label="Property filters">
       <input id="f-search" type="search" aria-label="Search street, sector, or title"
         placeholder="Search street, sector, vibe..." class="control-input search-input" />
 
-      <select id="f-zone" aria-label="Filter by zone" class="control-select">
-        <option value="all">All Zones</option>
-        <option value="la_dehesa">La Dehesa / Lo Barnechea</option>
-        <option value="alto_las_condes">Alto Las Condes / Las Condes</option>
-      </select>
+      <button id="btn-filters-mobile" type="button" class="mobile-filter-toggle" aria-expanded="false" aria-controls="filter-extras">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="4" y1="6" x2="20" y2="6"></line>
+          <line x1="7" y1="12" x2="17" y2="12"></line>
+          <line x1="10" y1="18" x2="14" y2="18"></line>
+        </svg>
+        <span id="mobile-filter-label">Filters</span>
+      </button>
 
-      <select id="f-beds" aria-label="Filter by bedrooms" class="control-select">
-        <option value="all">4–6 Bedrooms</option>
-        <option value="4">4 Bedrooms</option>
-        <option value="5">5 Bedrooms</option>
-        <option value="6">6 Bedrooms</option>
-      </select>
+      <div id="filter-extras" class="filter-extras">
+        <select id="f-zone" aria-label="Filter by zone" class="control-select">
+          <option value="all">All Zones</option>
+          <option value="la_dehesa">La Dehesa / Lo Barnechea</option>
+          <option value="alto_las_condes">Alto Las Condes / Las Condes</option>
+        </select>
 
-      <select id="f-rooms" aria-label="Filter by total rooms" class="control-select">
-        <option value="0">Any Total Rooms</option>
-        <option value="7">7+ Total Rooms</option>
-        <option value="8">8+ Total Rooms</option>
-        <option value="9">9+ Total Rooms</option>
-      </select>
+        <select id="f-beds" aria-label="Filter by bedrooms" class="control-select">
+          <option value="all">4–6 Bedrooms</option>
+          <option value="4">4 Bedrooms</option>
+          <option value="5">5 Bedrooms</option>
+          <option value="6">6 Bedrooms</option>
+        </select>
 
-      <label class="range-group" for="f-max-price">
-        <span>Max:</span>
-        <input id="f-max-price" type="range" min="3000000" max="5000000" step="100000" value="5000000" />
-        <span id="f-max-price-lbl" class="tabular-nums">$5.0M</span>
-      </label>
+        <select id="f-rooms" aria-label="Filter by total rooms" class="control-select">
+          <option value="0">Any Total Rooms</option>
+          <option value="7">7+ Total Rooms</option>
+          <option value="8">8+ Total Rooms</option>
+          <option value="9">9+ Total Rooms</option>
+        </select>
 
-      <label class="check-pill">
-        <input id="f-new-only" type="checkbox" />
-        <span>Fresh (24h)</span>
-      </label>
+        <label class="range-group" for="f-max-price">
+          <span>Max:</span>
+          <input id="f-max-price" type="range" min="3000000" max="5000000" step="100000" value="5000000" />
+          <span id="f-max-price-lbl" class="tabular-nums">$5.0M</span>
+        </label>
 
-      <label class="check-pill">
-        <input id="f-unseen-only" type="checkbox" />
-        <span>Not Peeked Yet</span>
-      </label>
+        <label class="check-pill">
+          <input id="f-new-only" type="checkbox" />
+          <span>Fresh (24h)</span>
+        </label>
 
-      <label class="check-pill">
-        <input id="f-pool" type="checkbox" />
-        <span>With Pool</span>
-      </label>
+        <label class="check-pill">
+          <input id="f-unseen-only" type="checkbox" />
+          <span>Not Peeked Yet</span>
+        </label>
 
-      <label class="check-pill">
-        <input id="f-condo" type="checkbox" />
-        <span>Condominio</span>
-      </label>
+        <label class="check-pill">
+          <input id="f-pool" type="checkbox" />
+          <span>With Pool</span>
+        </label>
 
-      <select id="f-sort" aria-label="Sort listings" class="control-select sort-select">
-        <option value="unseen_first">Fresh &amp; Unseen First</option>
-        <option value="price_asc">Price: Low to High</option>
-        <option value="price_desc">Price: High to Low</option>
-        <option value="beds_desc">Bedrooms: Most First</option>
-        <option value="m2_desc">Size (m²): Largest First</option>
-        <option value="rooms_desc">Total Rooms: Most First</option>
-      </select>
+        <label class="check-pill">
+          <input id="f-condo" type="checkbox" />
+          <span>Condominio</span>
+        </label>
+
+        <select id="f-sort" aria-label="Sort listings" class="control-select sort-select">
+          <option value="unseen_first">Fresh &amp; Unseen First</option>
+          <option value="price_asc">Price: Low to High</option>
+          <option value="price_desc">Price: High to Low</option>
+          <option value="beds_desc">Bedrooms: Most First</option>
+          <option value="m2_desc">Size (m²): Largest First</option>
+          <option value="rooms_desc">Total Rooms: Most First</option>
+        </select>
+      </div>
     </section>
 
     <!-- Main Grid: Map + Explorer List -->
@@ -1132,6 +1449,44 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       </section>
     </main>
   </div>
+
+  <!-- Mobile Bottom Sheet Backdrop & Fixed Bottom Navigation -->
+  <div id="sheet-backdrop" class="mobile-sheet-backdrop" aria-hidden="true"></div>
+  <nav class="mobile-bottom-nav" aria-label="Mobile view navigation">
+    <button type="button" class="mobile-nav-btn" data-mobile-nav="list" aria-current="page">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="8" y1="6" x2="21" y2="6"></line>
+        <line x1="8" y1="12" x2="21" y2="12"></line>
+        <line x1="8" y1="18" x2="21" y2="18"></line>
+        <circle cx="3.5" cy="6" r="1"></circle>
+        <circle cx="3.5" cy="12" r="1"></circle>
+        <circle cx="3.5" cy="18" r="1"></circle>
+      </svg>
+      <span>Houses</span>
+    </button>
+    <button type="button" class="mobile-nav-btn" data-mobile-nav="map">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+        <line x1="8" y1="2" x2="8" y2="18"></line>
+        <line x1="16" y1="6" x2="16" y2="22"></line>
+      </svg>
+      <span>Map</span>
+    </button>
+    <button type="button" class="mobile-nav-btn" data-mobile-nav="yes">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      <span>Love It</span>
+    </button>
+    <button type="button" class="mobile-nav-btn" data-mobile-nav="filters">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="4" y1="6" x2="20" y2="6"></line>
+        <line x1="7" y1="12" x2="17" y2="12"></line>
+        <line x1="10" y1="18" x2="14" y2="18"></line>
+      </svg>
+      <span>Filters</span>
+    </button>
+  </nav>
 
   <script>
     const PAYLOAD = __PAYLOAD_JSON__;
@@ -1538,10 +1893,10 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       });
     }
 
-    function findPinAt(mx, my) {
+    function findPinAt(mx, my, hitRadius = 16) {
       const items = getFilteredListings();
       let best = null;
-      let bestDist = 16;
+      let bestDist = hitRadius;
       for (const item of items) {
         if (!item.lat || !item.lon) continue;
         const p = project(item.lat, item.lon);
@@ -1667,8 +2022,9 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       if (activePointers.size === 0) {
         if (wasSingleTap) {
           const rect = canvas.getBoundingClientRect();
-          const hit = findPinAt(e.clientX - rect.left, e.clientY - rect.top);
-          if (hit) selectProperty(hit.id);
+          const hitRadius = e.pointerType === "touch" ? 26 : 16;
+          const hit = findPinAt(e.clientX - rect.left, e.clientY - rect.top, hitRadius);
+          if (hit) selectProperty(hit.id, true, true);
         }
         mapState.isPinching = false;
       }
@@ -1715,7 +2071,40 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       });
     });
 
-    function selectProperty(id, markSeen = true) {
+    function isMobileViewport() {
+      return window.matchMedia("(max-width: 1024px)").matches;
+    }
+
+    function openMobileSheet() {
+      if (isMobileViewport()) {
+        document.body.classList.add("sheet-open");
+      }
+    }
+
+    function closeMobileSheet() {
+      document.body.classList.remove("sheet-open");
+    }
+
+    function setMobileView(view) {
+      document.body.classList.toggle("mobile-view-map", view === "map");
+      document.body.classList.toggle("mobile-view-list", view !== "map");
+      document.querySelectorAll(".mobile-nav-btn[data-mobile-nav]").forEach((btn) => {
+        const nav = btn.dataset.mobileNav;
+        if (nav === "list" || nav === "map") {
+          btn.setAttribute("aria-current", nav === view ? "page" : "false");
+        }
+      });
+      if (view === "map") {
+        requestAnimationFrame(resizeCanvas);
+      }
+    }
+
+    function showSelectedOnMap() {
+      closeMobileSheet();
+      setMobileView("map");
+    }
+
+    function selectProperty(id, markSeen = true, shouldOpenSheet = true) {
       mapState.selectedId = id;
       const item = LISTINGS.find((x) => x.id === id);
       if (markSeen && item) {
@@ -1733,6 +2122,9 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       renderInspector(item);
       renderList();
       drawMap();
+      if (shouldOpenSheet && item) {
+        openMobileSheet();
+      }
     }
 
     const SVG_CHECK = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>`;
@@ -1759,6 +2151,13 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       const distAlto = (item.lat && item.lon) ? kmBetween(item.lat, item.lon, ALTO_LC.lat, ALTO_LC.lon).toFixed(1) : null;
 
       box.innerHTML = `
+        <div class="mobile-sheet-header">
+          <span class="mobile-sheet-title">House Peek</span>
+          <div style="display:flex; gap:8px;">
+            <button type="button" class="mobile-sheet-close" onclick="showSelectedOnMap()">On Map</button>
+            <button type="button" class="mobile-sheet-close" aria-label="Close house details" onclick="closeMobileSheet()">Done</button>
+          </div>
+        </div>
         <div class="inspector-layout">
           ${item.image ? `<img src="${esc(item.image)}" alt="${esc(item.title)}" class="inspector-thumb" onerror="this.style.display='none'" />` : ""}
           <div class="inspector-body">
@@ -1823,6 +2222,20 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
           </div>
         </div>
       `;
+    }
+
+    function updateMobileFilterBadge() {
+      let count = 0;
+      if (document.getElementById("f-zone").value !== "all") count++;
+      if (document.getElementById("f-beds").value !== "all") count++;
+      if (document.getElementById("f-rooms").value !== "0") count++;
+      if (parseInt(document.getElementById("f-max-price").value, 10) < 5000000) count++;
+      if (document.getElementById("f-new-only").checked) count++;
+      if (document.getElementById("f-unseen-only").checked) count++;
+      if (document.getElementById("f-pool").checked) count++;
+      if (document.getElementById("f-condo").checked) count++;
+      const lbl = document.getElementById("mobile-filter-label");
+      if (lbl) lbl.textContent = count ? `Filters (${count})` : "Filters";
     }
 
     function resetFilters() {
@@ -1890,7 +2303,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
 
         return `
           <div class="${rowCls}">
-            <button type="button" class="listing-main" aria-pressed="${isSel}" onclick="selectProperty('${esc(item.id)}')">
+            <button type="button" class="listing-main" aria-pressed="${isSel}" onclick="selectProperty('${esc(item.id)}', true, true)">
               ${item.image
                 ? `<img src="${esc(item.image)}" alt="" class="listing-thumb" loading="lazy" onerror="this.outerHTML='<div class=\\'listing-thumb-empty\\'>No img</div>'" />`
                 : `<div class="listing-thumb-empty">No img</div>`}
@@ -1928,6 +2341,7 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
     }
 
     function renderAll() {
+      updateMobileFilterBadge();
       renderList();
       drawMap();
       if (mapState.selectedId) {
@@ -1936,12 +2350,57 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       }
     }
 
-    document.querySelectorAll(".triage-tab").forEach((tabBtn) => {
-      tabBtn.addEventListener("click", () => {
-        activeTab = tabBtn.dataset.tab;
-        document.querySelectorAll(".triage-tab").forEach((b) => b.setAttribute("aria-selected", String(b === tabBtn)));
-        renderAll();
+    function setActiveTab(tabName) {
+      activeTab = tabName;
+      document.querySelectorAll(".triage-tab").forEach((b) => {
+        b.setAttribute("aria-selected", String(b.dataset.tab === tabName));
       });
+      renderAll();
+    }
+
+    document.querySelectorAll(".triage-tab").forEach((tabBtn) => {
+      tabBtn.addEventListener("click", () => setActiveTab(tabBtn.dataset.tab));
+    });
+
+    // Mobile filter drawer toggle
+    const filterBarEl = document.getElementById("filter-bar");
+    const mobileFilterBtn = document.getElementById("btn-filters-mobile");
+    function toggleMobileFilters(forceOpen) {
+      const next = typeof forceOpen === "boolean" ? forceOpen : !filterBarEl.classList.contains("is-open");
+      filterBarEl.classList.toggle("is-open", next);
+      mobileFilterBtn.setAttribute("aria-expanded", String(next));
+      const navFilterBtn = document.querySelector(".mobile-nav-btn[data-mobile-nav='filters']");
+      if (navFilterBtn) navFilterBtn.setAttribute("aria-pressed", String(next));
+    }
+    mobileFilterBtn.addEventListener("click", () => toggleMobileFilters());
+
+    // Mobile bottom navigation bar
+    document.querySelectorAll(".mobile-nav-btn[data-mobile-nav]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const nav = btn.dataset.mobileNav;
+        if (nav === "list") {
+          closeMobileSheet();
+          setMobileView("list");
+          if (activeTab === "yes") setActiveTab("review");
+        } else if (nav === "map") {
+          closeMobileSheet();
+          setMobileView("map");
+        } else if (nav === "yes") {
+          closeMobileSheet();
+          setMobileView("list");
+          setActiveTab("yes");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } else if (nav === "filters") {
+          closeMobileSheet();
+          toggleMobileFilters();
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      });
+    });
+
+    document.getElementById("sheet-backdrop").addEventListener("click", closeMobileSheet);
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeMobileSheet();
     });
 
     document.getElementById("btn-mark-seen").addEventListener("click", markAllVisibleSeen);
@@ -1965,12 +2424,15 @@ HTML_TEMPLATE = r"""<!DOCTYPE html>
       URL.revokeObjectURL(url);
     });
 
-    window.addEventListener("resize", resizeCanvas);
+    window.addEventListener("resize", () => {
+      resizeCanvas();
+      if (!isMobileViewport()) closeMobileSheet();
+    });
     window.addEventListener("themechange", drawMap);
     resizeCanvas();
     renderAll();
     if (LISTINGS.length) {
-      selectProperty(LISTINGS[0].id, false);
+      selectProperty(LISTINGS[0].id, false, false);
     }
   </script>
 </body>
