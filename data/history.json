@@ -965,7 +965,7 @@
   },
   "pi_MLC4670968336": {
     "first_seen": "2026-11-20",
-    "last_seen": "2026-11-20",
+    "last_seen": "2026-11-24",
     "price_history": [
       {
         "date": "2026-11-20",
@@ -986,6 +986,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 3063494
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3060949
       }
     ],
     "title": "Casa En Arriendo De 4 Dorm. En Lo Barnechea",
@@ -1014,6 +1018,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 3270487
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3267769
       }
     ],
     "title": "Linda Casa En Condominio Cerrado Arriendo Por 1 Año Amoblado",
@@ -1054,6 +1062,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 3311886
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3309134
       }
     ],
     "title": "Casa Camino Farellones. Vista Panorámica, Piscina, Jardines",
@@ -1061,11 +1073,15 @@
   },
   "pi_MLC4688814956": {
     "first_seen": "2026-11-20",
-    "last_seen": "2026-11-20",
+    "last_seen": "2026-11-24",
     "price_history": [
       {
         "date": "2026-11-20",
         "price_clp": 3351055
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3350498
       }
     ],
     "title": "Condominio Parque La Dehesa",
@@ -1082,6 +1098,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 3353284
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3350498
       }
     ],
     "title": "Acogedora Casa En Condominio",
@@ -1098,6 +1118,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 3353284
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3350498
       }
     ],
     "title": "Excelente, En Condominio Con Areas Verdes, Juegos, Seguridad",
@@ -1114,6 +1138,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 3436081
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3433226
       }
     ],
     "title": "Casa En Arriendo Sector Jardines Del Sol",
@@ -1166,6 +1194,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 3518878
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3515954
       }
     ],
     "title": "Arriendo Casa De Un Piso Con Piscina Y Quincho En Las Condes",
@@ -1182,6 +1214,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 3518878
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3515954
       }
     ],
     "title": "Arriendo Amplia Casa Con Hermoso Jardín/alto Las Condes",
@@ -1198,6 +1234,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 3518878
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3515954
       }
     ],
     "title": "Espectacular Y Luminosa Casa/ Gran Patio / Arboles Frutales",
@@ -1205,11 +1245,15 @@
   },
   "pi_MLC2356223131": {
     "first_seen": "2026-11-20",
-    "last_seen": "2026-11-20",
+    "last_seen": "2026-11-24",
     "price_history": [
       {
         "date": "2026-11-20",
         "price_clp": 3557910
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3557319
       }
     ],
     "title": "Casa Amoblada Y Remodelada Con Piscina · 5d 5b ·",
@@ -1217,11 +1261,15 @@
   },
   "pi_MLC2377259247": {
     "first_seen": "2026-11-20",
-    "last_seen": "2026-11-20",
+    "last_seen": "2026-11-24",
     "price_history": [
       {
         "date": "2026-11-20",
         "price_clp": 3557910
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3557319
       }
     ],
     "title": "Arriendo Casa Amoblada Con Piscina En Condominio La Dehesa",
@@ -1229,11 +1277,15 @@
   },
   "pi_MLC2360509195": {
     "first_seen": "2026-11-20",
-    "last_seen": "2026-11-20",
+    "last_seen": "2026-11-24",
     "price_history": [
       {
         "date": "2026-11-20",
         "price_clp": 3557910
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3557319
       }
     ],
     "title": "Casa Amoblada Tres Pisos , Seis Dormitorios",
@@ -1241,11 +1293,15 @@
   },
   "pi_MLC4650667768": {
     "first_seen": "2026-11-20",
-    "last_seen": "2026-11-20",
+    "last_seen": "2026-11-24",
     "price_history": [
       {
         "date": "2026-11-20",
         "price_clp": 3557910
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3557319
       }
     ],
     "title": "Casa Amoblada Seis Dormitorios Condominio Cerrado",
@@ -1262,6 +1318,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 3560277
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3557319
       }
     ],
     "title": "Casa De 6 Dormitorios En La Cienaga , Lo Barnechea ! Piscina",
@@ -1269,11 +1329,15 @@
   },
   "pi_MLC2427713607": {
     "first_seen": "2026-11-20",
-    "last_seen": "2026-11-20",
+    "last_seen": "2026-11-24",
     "price_history": [
       {
         "date": "2026-11-20",
         "price_clp": 3557910
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3557319
       }
     ],
     "title": "Casa Remodelada En Lo Barnechea, Condominio Seguro",
@@ -1281,11 +1345,15 @@
   },
   "pi_MLC4622097202": {
     "first_seen": "2026-11-20",
-    "last_seen": "2026-11-20",
+    "last_seen": "2026-11-24",
     "price_history": [
       {
         "date": "2026-11-20",
         "price_clp": 3557910
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3557319
       }
     ],
     "title": "Casa Amoblada 6d+5b/piscina/condominio/la Dehesa",
@@ -1293,11 +1361,15 @@
   },
   "pi_MLC2352137823": {
     "first_seen": "2026-11-20",
-    "last_seen": "2026-11-20",
+    "last_seen": "2026-11-24",
     "price_history": [
       {
         "date": "2026-11-20",
         "price_clp": 3557910
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3557319
       }
     ],
     "title": "Casa Amoblada En Condominio Con Seguridad 24 /7",
@@ -1314,6 +1386,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 3560277
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3557319
       }
     ],
     "title": "Amobladaen, Remodelada, Condominio En Excelente Condiciones.",
@@ -1330,6 +1406,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 3560277
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3557319
       }
     ],
     "title": "Casa Amoblada En Condominio Los Quillayes, Lo Barnechea",
@@ -1346,6 +1426,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 3684473
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3681411
       }
     ],
     "title": "Arriendo Casa San Carlos De Apoquindo",
@@ -1362,6 +1446,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 3932864
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3929596
       }
     ],
     "title": "Arriendo Casa De Un Piso",
@@ -1381,11 +1469,15 @@
   },
   "pi_MLC4682192134": {
     "first_seen": "2026-11-20",
-    "last_seen": "2026-11-20",
+    "last_seen": "2026-11-24",
     "price_history": [
       {
         "date": "2026-11-20",
         "price_clp": 4137105
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 4136417
       }
     ],
     "title": "Casa Familiar - Gran Terreno - Perimetral",
@@ -1402,6 +1494,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 4139857
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 4136417
       }
     ],
     "title": "Gran Casona, Parque Los Dominicos, Las Condes",
@@ -1454,6 +1550,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 4553843
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 4550059
       }
     ],
     "title": "Casa En Arriendo - Condominio - Los Domínicos Antiguo",
@@ -1482,6 +1582,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 4912354
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 4908272
       }
     ],
     "title": "Casa En Arriendo De 5 Dorm. En Las Condes",
@@ -1498,6 +1602,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 4967828
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 4963700
       }
     ],
     "title": "Excelente Casa En Los Dominicos.",
@@ -1734,6 +1842,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 3518878
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3515954
       }
     ],
     "title": "Piscina/alto Las Condes/ Oportunidad/arriendo/ Jardin/grande",
@@ -1746,6 +1858,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 3518878
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3515954
       }
     ],
     "title": "Casa Mediterranea En Condominio La Dehesa",
@@ -1830,6 +1946,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 3808668
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 3805504
       }
     ],
     "title": "Pie Andino",
@@ -1854,6 +1974,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 4015661
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 4012324
       }
     ],
     "title": "Oportunidad Única: Hogar Con Estilo Y Vistas (165767)",
@@ -1866,6 +1990,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 4139857
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 4136417
       }
     ],
     "title": "Exclusiva Los Litres/condominio El Divisadero",
@@ -1878,6 +2006,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 4139857
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 4136417
       }
     ],
     "title": "Arriendo Casa Mediterranea Paseo Andino - Lo Barnechea",
@@ -1890,6 +2022,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 4139857
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 4136417
       }
     ],
     "title": "Arriendo A Pasos Colegio Monte Tabor. Condominio! Febrero",
@@ -1914,6 +2050,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 4346850
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 4343238
       }
     ],
     "title": "Casa Arriendo 4d/4b Lo Barnechea (183601)",
@@ -1938,6 +2078,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 4346850
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 4343238
       }
     ],
     "title": "Arriendo 5d/3b + Family + Servicio+escritorio",
@@ -1950,6 +2094,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 4346850
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 4343238
       }
     ],
     "title": "Casa En Arriendo De 6 Dorm. En Lo Barnechea",
@@ -1962,6 +2110,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 4346850
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 4343238
       }
     ],
     "title": "Los Bravos Condominio Seguro Espectacular Casa Impecable",
@@ -1974,6 +2126,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 4346850
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 4343238
       }
     ],
     "title": "Espectacular Casa Mediterranea En Los Litres 5d",
@@ -1998,6 +2154,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 4553843
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 4550059
       }
     ],
     "title": "Condominio San Damian",
@@ -2010,6 +2170,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 4553843
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 4550059
       }
     ],
     "title": "Se Arrienda Casa Espectacular Vista, En Alicura Lo Barnechea",
@@ -2022,6 +2186,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 4553843
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 4550059
       }
     ],
     "title": "Mediterránea Luminosa Y Moderna Con Lindas Vistas Arriendo",
@@ -2034,6 +2202,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 4553843
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 4550059
       }
     ],
     "title": "Casa Condominio 4d| 4b| Gran Jardín, Piscina Y Quincho",
@@ -2046,6 +2218,10 @@
       {
         "date": "2026-11-24",
         "price_clp": 4760836
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 4756880
       }
     ],
     "title": "Los Bravos, Orientación Norte, No Perimentral!",
@@ -2070,9 +2246,61 @@
       {
         "date": "2026-11-24",
         "price_clp": 4760836
+      },
+      {
+        "date": "2026-11-24",
+        "price_clp": 4756880
       }
     ],
     "title": "Arriendo Exclusivo Sector Los Trapenses/ Maravillosa Vista",
     "url": "https://casa.mercadolibre.cl/MLC-4701940742-arriendo-exclusivo-sector-los-trapenses-maravillosa-vista-_JM"
+  },
+  "pi_MLC2444796791": {
+    "first_seen": "2026-11-24",
+    "last_seen": "2026-11-24",
+    "price_history": [
+      {
+        "date": "2026-11-24",
+        "price_clp": 3102313
+      }
+    ],
+    "title": "Casa En Arriendo De 5 Dorm. En Lo Barnechea",
+    "url": "https://portalinmobiliario.com/MLC-2444796791-casa-en-arriendo-de-5-dorm-en-lo-barnechea-_JM"
+  },
+  "ml_MLC4544902096": {
+    "first_seen": "2026-11-24",
+    "last_seen": "2026-11-24",
+    "price_history": [
+      {
+        "date": "2026-11-24",
+        "price_clp": 3267769
+      }
+    ],
+    "title": "Excelente Casa En Arriendo",
+    "url": "https://casa.mercadolibre.cl/MLC-4544902096-excelente-casa-en-arriendo-_JM"
+  },
+  "pi_MLC4610657618": {
+    "first_seen": "2026-11-24",
+    "last_seen": "2026-11-24",
+    "price_history": [
+      {
+        "date": "2026-11-24",
+        "price_clp": 3474590
+      }
+    ],
+    "title": "Casa Familiar En Condominio",
+    "url": "https://portalinmobiliario.com/MLC-4610657618-casa-familiar-en-condominio-_JM"
+  },
+  "pi_MLC2444510311": {
+    "first_seen": "2026-11-24",
+    "last_seen": "2026-11-24",
+    "price_history": [
+      {
+        "date": "2026-11-24",
+        "price_clp": 4963700
+      }
+    ],
+    "title": "Condominio Impecable Cercana Colegio Newland",
+    "url": "https://portalinmobiliario.com/MLC-2444510311-condominio-impecable-cercana-colegio-newland-_JM"
   }
 }
