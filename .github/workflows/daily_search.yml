@@ -1,9 +1,7 @@
-name: Daily Santiago House Search (7:00 AM Santiago)
+name: Manual Santiago House Search (Fallback)
 
 on:
-  schedule:
-    # 7:00 AM America/Santiago (UTC-3 in summer = 10:00 UTC; adjust to 11:00 UTC in winter)
-    - cron: "0 10 * * *"
+  # Disabled automatic cloud schedule so local browser runs (including MercadoLibre & PortalInmobiliario) are not overwritten.
   workflow_dispatch:
 
 permissions:

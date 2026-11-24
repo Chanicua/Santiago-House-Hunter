@@ -9,19 +9,20 @@ Automated daily house search and interactive map explorer for **4–6 bedroom ho
 - **Daily History Tracking**: Tracks `first_seen`, `last_seen`, and price changes in `data/history.json`.
 - **Interactive Map & Shortlist Tracker**: Generates a self-contained `output/map.html` with pan/zoom map, filters, and a persistent shortlist/notes tracker (`localStorage` + JSON export).
 
-## Run Manually
+## Local Browser Scraping (Recommended — includes TOCTOC, MercadoLibre & PortalInmobiliario)
+
+Run on your own computer so MercadoLibre & PortalInmobiliario open in your real local browser:
+
 ```bash
+# One-time setup on your computer
+git clone https://github.com/Chanicua/Santiago-House-Hunter.git
+cd Santiago-House-Hunter
+pip install playwright && playwright install chromium
+
+# Run scraper using your local Chrome/Chromium + rebuild map + push to GitHub Pages
 ./run_daily.sh
 ```
-Open `output/map.html` in any browser.
 
-## Daily 7:00 AM Automation (America/Santiago)
-
-### Option A: GitHub Actions (Recommended — runs in the cloud even when your computer is off)
-Push this directory to a GitHub repository. The included workflow `.github/workflows/daily_search.yml` runs every day at **7:00 AM Santiago time** (`0 10 * * *` UTC) and commits updated `data/listings.json`, `data/history.json`, and `output/map.html`. You can enable **GitHub Pages** on the repo to view `output/map.html` from anywhere.
-
-### Option B: Local Cron (Linux / macOS)
-```bash
-./setup_schedule.sh
-```
-This installs a `0 7 * * *` cron job with `CRON_TZ=America/Santiago`.
+- A visible browser window opens with a persistent local profile (`~/.santiago-house-hunter-browser`). If MercadoLibre or PortalInmobiliario asks you to sign in or verify, complete it in the browser window and press **Enter** in the terminal.
+- `./run_daily.sh` automatically rebuilds `output/map.html` and pushes the updated listings to `main` (updating https://chanicua.github.io/Santiago-House-Hunter/) while keeping your shared `data/tracker.json` intact.
+- Use `NO_PUSH=1 ./run_daily.sh` to run locally without pushing to GitHub, or `./setup_schedule.sh` to schedule a daily 7:00 AM Santiago local cron job.

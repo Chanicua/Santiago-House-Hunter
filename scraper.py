@@ -5,15 +5,17 @@ Fetches 4-6 bedroom houses for rent (3M-5M CLP) in La Dehesa & Alto Las Condes /
 from TOCTOC and PortalInmobiliario, converts UF to CLP, geocodes addresses, and tracks history.
 """
 
+import argparse
 import json
 import os
 import re
+import sys
 import time
 import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 BASE_DIR = Path(__file__).resolve().parent
 DATA_DIR = BASE_DIR / "data"
@@ -77,6 +79,116 @@ def fetch_url(url: str, timeout: int = 15) -> str:
     req = urllib.request.Request(url, headers=HEADERS)
     with urllib.request.urlopen(req, timeout=timeout) as resp:
         return resp.read().decode("utf-8", errors="ignore")
+
+
+class LocalBrowserFetcher:
+    """Opens the user's local Chrome/Chromium in a visible window with a persistent profile."""
+
+    def __init__(self, profile_dir: Path, channel: str = "chrome") -> None:
+        self.profile_dir = profile_dir
+        self.channel = channel
+        self._pw = None
+        self._ctx = None
+        self._page = None
+
+    def __enter__(self) -> "LocalBrowserFetcher":
+        try:
+            from playwright.sync_api import sync_playwright
+        except ImportError as e:
+            raise RuntimeError(
+                "Playwright is required for --browser mode. Install once on your machine with:\n"
+                "  pip install playwright && playwright install chromium"
+            ) from e
+
+        self.profile_dir.mkdir(parents=True, exist_ok=True)
+        self._pw = sync_playwright().start()
+
+        launch_errors: List[str] = []
+        channels = [self.channel, "msedge", None] if self.channel else [None]
+        for ch in channels:
+            kwargs: Dict[str, Any] = {
+                "user_data_dir": str(self.profile_dir),
+                "headless": False,
+                "locale": "es-CL",
+                "viewport": {"width": 1280, "height": 860},
+            }
+            if ch:
+                kwargs["channel"] = ch
+            try:
+                self._ctx = self._pw.chromium.launch_persistent_context(**kwargs)
+                print(f"[INFO] Opened local browser ({ch or 'bundled chromium'}) with profile {self.profile_dir}")
+                break
+            except Exception as err:
+                launch_errors.append(f"{ch or 'chromium'}: {err}")
+
+        if not self._ctx:
+            self._pw.stop()
+            raise RuntimeError("Could not launch local browser:\n  " + "\n  ".join(launch_errors))
+
+        self._page = self._ctx.pages[0] if self._ctx.pages else self._ctx.new_page()
+        return self
+
+    def __exit__(self, exc_type: Any, exc: Any, tb: Any) -> None:
+        try:
+            if self._ctx:
+                self._ctx.close()
+        finally:
+            if self._pw:
+                self._pw.stop()
+
+    def fetch(self, url: str, check_ready: Optional[Callable[[str], bool]] = None) -> str:
+        assert self._page is not None
+        self._page.goto(url, wait_until="domcontentloaded", timeout=30000)
+        try:
+            self._page.wait_for_load_state("networkidle", timeout=6000)
+        except Exception:
+            pass
+
+        html = self._page.content()
+        if check_ready and not check_ready(html) and sys.stdin.isatty():
+            print(f"[ACTION NEEDED] {url}")
+            print("  If the browser is showing a sign-in or verification screen, complete it directly in the browser window.")
+            ans = input("  Press Enter once listings are visible (or type 's' to skip this page): ").strip().lower()
+            if ans == "s":
+                return ""
+            try:
+                self._page.wait_for_load_state("networkidle", timeout=5000)
+            except Exception:
+                pass
+            html = self._page.content()
+        return html
+
+    def extract_visible_cards(self) -> List[Dict[str, Any]]:
+        """Fallback DOM extraction for rendered MercadoLibre / PortalInmobiliario result cards."""
+        assert self._page is not None
+        return self._page.evaluate(
+            r"""() => {
+                const nodes = Array.from(document.querySelectorAll('.ui-search-layout__item, .poly-card'));
+                const seen = new Set();
+                const out = [];
+                for (const el of nodes) {
+                    const link = el.querySelector('a.poly-component__title, a.ui-search-link, a[href*="MLC"], a[href*="/arriendo/"]');
+                    const url = link ? link.href : '';
+                    if (!url || seen.has(url)) continue;
+                    seen.add(url);
+                    const title = (link.textContent || '').trim();
+                    const currEl = el.querySelector('.andes-money-amount__currency-symbol');
+                    const fracEl = el.querySelector('.andes-money-amount__fraction');
+                    const currency = currEl ? currEl.textContent.trim() : '$';
+                    const priceText = fracEl ? fracEl.textContent.trim() : '';
+                    const locEl = el.querySelector('.poly-component__location, .ui-search-item__location, .ui-search-item__location-label');
+                    const loc = locEl ? locEl.textContent.trim() : '';
+                    const attrs = Array.from(el.querySelectorAll('.poly-attributes-list__item, .ui-search-card-attributes__attribute'))
+                        .map((a) => (a.textContent || '').trim()).filter(Boolean);
+                    const imgEl = el.querySelector('img');
+                    const img = imgEl ? (imgEl.getAttribute('data-src') || imgEl.src || '') : '';
+                    if (title && priceText) {
+                        out.push({ title, url, currency, priceText, loc, attrs, img });
+                    }
+                }
+                return out;
+            }"""
+        )
 
 
 def get_uf_value(fallback: float) -> float:
@@ -407,6 +519,7 @@ def scrape_portalinmobiliario(
     geo_cache: Dict[str, List[float]],
     source_name: str = "PortalInmobiliario",
     id_prefix: str = "pi",
+    browser_fetcher: Optional[LocalBrowserFetcher] = None,
 ) -> List[Dict[str, Any]]:
     results: List[Dict[str, Any]] = []
     base_url = source_cfg["url"]
@@ -421,12 +534,90 @@ def scrape_portalinmobiliario(
             url = f"{base_url}/_Desde_{offset}_NoIndex_True"
 
         try:
-            html = fetch_url(url)
+            if browser_fetcher:
+                html = browser_fetcher.fetch(
+                    url,
+                    check_ready=lambda h: bool(_extract_polycards(h)) or ("poly-card" in h) or ("ui-search-layout__item" in h),
+                )
+            else:
+                html = fetch_url(url)
         except Exception as e:
             print(f"[WARN] {source_name} fetch failed ({url}): {e}")
             break
 
+        if not html:
+            break
+
         polycards = _extract_polycards(html)
+        if not polycards and browser_fetcher:
+            dom_cards = browser_fetcher.extract_visible_cards()
+            if dom_cards:
+                print(f"[INFO] {source_name} {url} -> {len(dom_cards)} raw DOM cards")
+                for dc in dom_cards:
+                    try:
+                        title = clean_text(dc.get("title", ""))
+                        loc_text = clean_text(dc.get("loc", ""))
+                        pval = parse_number(dc.get("priceText", ""))
+                        if pval is None:
+                            continue
+                        curr = dc.get("currency", "$").upper()
+                        if "UF" in curr:
+                            price_uf = float(pval)
+                            price_clp = round(price_uf * uf_clp)
+                        else:
+                            price_clp = float(pval)
+                            price_uf = round(price_clp / uf_clp, 1)
+
+                        beds = 0
+                        baths = 0
+                        built_m2 = None
+                        for a in dc.get("attrs", []):
+                            al = a.lower()
+                            if "dormitorio" in al:
+                                beds = int(parse_number(al) or 0)
+                            elif "baño" in al:
+                                baths = int(parse_number(al) or 0)
+                            elif "m²" in al or "m2" in al:
+                                built_m2 = parse_number(al)
+
+                        zone = classify_zone(None, None, f"{title} {loc_text}", default_zone, zones_cfg)
+                        clean_addr = re.sub(r"\b\d+(?:\.\d+)?e\+\d+\s*-\s*\d+(?:\.\d+)?e\+\d+\b", "", loc_text).strip()
+                        lat, lon, precision = geocode_address(clean_addr or title, zone, geo_cache, zones_cfg, allow_nominatim=True)
+                        feats = extract_features(title, loc_text, beds)
+                        prop_url = dc.get("url", "")
+                        mlc_m = re.search(r"MLC-?\d+", prop_url)
+                        pid = f"{id_prefix}_{mlc_m.group(0).replace('-', '') if mlc_m else abs(hash(prop_url or title))}"
+                        comuna = "Lo Barnechea" if zone == "la_dehesa" else "Las Condes"
+
+                        results.append(
+                            {
+                                "id": pid,
+                                "source": source_name,
+                                "title": title,
+                                "url": prop_url,
+                                "image": dc.get("img", ""),
+                                "agency": source_name,
+                                "comuna": comuna,
+                                "address": clean_addr,
+                                "zone": zone,
+                                "zone_label": zones_cfg[zone]["label"],
+                                "price_clp": int(round(price_clp)),
+                                "price_uf": price_uf,
+                                "bedrooms": beds,
+                                "bathrooms": baths,
+                                "built_m2": built_m2,
+                                "lat": lat,
+                                "lon": lon,
+                                "coord_precision": precision,
+                                "published_ago": "",
+                                "description_excerpt": "",
+                                **feats,
+                            }
+                        )
+                    except Exception:
+                        continue
+                continue
+
         if not polycards:
             t_m = re.search(r"<title[^>]*>(.*?)</title>", html, re.I | re.S)
             page_title = clean_text(t_m.group(1)) if t_m else "unknown"
@@ -588,6 +779,24 @@ def update_history(listings: List[Dict[str, Any]], history: Dict[str, Any], toda
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Santiago House Hunter daily scraper")
+    parser.add_argument(
+        "--browser",
+        action="store_true",
+        help="Use your local visible Chrome/Chromium browser (via Playwright) for PortalInmobiliario & MercadoLibre.",
+    )
+    parser.add_argument(
+        "--profile-dir",
+        default=str(Path.home() / ".santiago-house-hunter-browser"),
+        help="Persistent browser profile directory for --browser mode.",
+    )
+    parser.add_argument(
+        "--browser-channel",
+        default="chrome",
+        help="Browser channel to launch in --browser mode (default: chrome; falls back to msedge/chromium).",
+    )
+    args = parser.parse_args()
+
     cfg = load_json(CONFIG_PATH, {})
     search_cfg = cfg["search"]
     zones_cfg = cfg["zones"]
@@ -603,10 +812,22 @@ def main() -> None:
     raw_listings: List[Dict[str, Any]] = []
     for src in sources_cfg.get("toctoc", []):
         raw_listings.extend(scrape_toctoc(src, uf_clp, zones_cfg))
-    for src in sources_cfg.get("portalinmobiliario", []):
-        raw_listings.extend(scrape_portalinmobiliario(src, uf_clp, zones_cfg, geo_cache, "PortalInmobiliario", "pi"))
-    for src in sources_cfg.get("mercadolibre", []):
-        raw_listings.extend(scrape_portalinmobiliario(src, uf_clp, zones_cfg, geo_cache, "MercadoLibre", "ml"))
+
+    if args.browser:
+        with LocalBrowserFetcher(Path(args.profile_dir), channel=args.browser_channel) as bf:
+            for src in sources_cfg.get("portalinmobiliario", []):
+                raw_listings.extend(
+                    scrape_portalinmobiliario(src, uf_clp, zones_cfg, geo_cache, "PortalInmobiliario", "pi", bf)
+                )
+            for src in sources_cfg.get("mercadolibre", []):
+                raw_listings.extend(
+                    scrape_portalinmobiliario(src, uf_clp, zones_cfg, geo_cache, "MercadoLibre", "ml", bf)
+                )
+    else:
+        for src in sources_cfg.get("portalinmobiliario", []):
+            raw_listings.extend(scrape_portalinmobiliario(src, uf_clp, zones_cfg, geo_cache, "PortalInmobiliario", "pi"))
+        for src in sources_cfg.get("mercadolibre", []):
+            raw_listings.extend(scrape_portalinmobiliario(src, uf_clp, zones_cfg, geo_cache, "MercadoLibre", "ml"))
 
     save_json(GEOCODE_CACHE_PATH, geo_cache)
 
