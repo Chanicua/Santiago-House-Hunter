@@ -25,4 +25,4 @@ pip install playwright && playwright install chromium
 
 - A visible browser window opens with a persistent local profile (`~/.santiago-house-hunter-browser`). If MercadoLibre or PortalInmobiliario asks you to sign in or verify, complete it in the browser window and press **Enter** in the terminal.
 - `./run_daily.sh` automatically rebuilds `output/map.html` and pushes the updated listings to `main` (updating https://chanicua.github.io/Santiago-House-Hunter/) while keeping your shared `data/tracker.json` intact.
-- Use `NO_PUSH=1 ./run_daily.sh` to run locally without pushing to GitHub, or `./setup_schedule.sh` to schedule a daily 7:00 AM Santiago local cron job.
+- Use `NO_PUSH=1 ./run_daily.sh` to run locally without pushing to GitHub, or `./setup_schedule.sh` to schedule a daily **4:00 AM** local run (uses `launchd` on macOS or `cron` on Linux).
